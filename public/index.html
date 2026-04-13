@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Hidratos Carbono</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+font-family:Arial;
+margin:0;
+background:#f0f2f5;
+}
+
+/* HEADER */
+header{
+background:#1e1e2f;
+color:white;
+padding:20px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+/* NAV */
+nav{
+display:flex;
+justify-content:center;
+gap:10px;
+background:#2c2c3e;
+padding:10px;
+flex-wrap:wrap;
+}
+
+nav button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+background:white;
+cursor:pointer;
+font-weight:bold;
+transition:0.2s;
+}
+
+nav button:hover{
+background:#ddd;
+}
+
+/* PANTALLAS */
+.pantalla{display:none;padding:20px}
+.activa{display:block}
+
+/* CARD */
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+max-width:900px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* INPUTS */
+input, textarea{
+width:100%;
+padding:10px;
+margin:5px 0;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+textarea{height:120px}
+
+/* FILA */
+.fila{
+display:flex;
+gap:10px;
+}
+
+.fila input{
+flex:1;
+}
+
+/* BOTONES */
+.btn{
+background:#4caf50;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.btn:hover{background:#45a049}
+
+.btn-rojo{
+background:#e74c3c;
+color:white;
+border:none;
+padding:8px;
+border-radius:8px;
+cursor:pointer;
+}
+
+.btn-rojo:hover{background:#c0392b}
+
+/* TABLAS */
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+td,th{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+position:relative;
+}
+
+/* EDITAR */
+.edit{
+position:relative;
+width:100%;
+text-align:center;
+}
+
+.edit span{
+display:block;
+width:100%;
+text-align:center;
+}
+
+.edit input{
+width:100%;
+box-sizing:border-box;
+text-align:center;
+padding-right:25px;
+}
+
+.lapiz{
+position:absolute;
+right:5px;
+top:50%;
+transform:translateY(-50%);
+background:none;
+border:none;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>🍽️ Gestor de Hidratos de Carbono</header>
+
+<nav>
+<button onclick="ir('inicio')">INICIO</button>
+<button onclick="ir('crear')">AÑADIR RECETAS</button>
+<button onclick="ir('recetas')">VER RECETAS</button>
+<button onclick="ir('ingredientes')">VER INGREDIENTES</button>
+</nav>
+
+<!-- INICIO -->
+<div id="inicio" class="pantalla activa">
+<div class="card">
+<p>Esta herramienta está diseñada para calcular los hidratos de carbono de recetas de forma rápida y sencilla.</p>
+<p>Introduce los ingredientes junto con sus cantidades y obtendrás automáticamente el total de hidratos de carbono.</p>
+<p>Si utilizas un alimento que no está registrado, podrás añadirlo fácilmente para usarlo en futuras recetas.</p>
+<p>Además, puedes guardar tus recetas y exportarlas en formato PDF.</p>
+</div>
+</div>
+
+<!-- CREAR -->
+<div id="crear" class="pantalla">
+<div class="card">
+<input id="nombre" placeholder="Nombre receta">
+<textarea id="texto"></textarea>
+<input id="personas" type="number" placeholder="Personas">
+<button class="btn" onclick="calcular()">Calcular</button>
+<div id="pregunta" style="display:none;"></div>
+</div>
+</div>
+
+<!-- RECETAS -->
+<div id="recetas" class="pantalla">
+<div class="card">
+<input id="buscarRec" placeholder="Buscar receta..." oninput="mostrarRecetas()">
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Total HC</th>
+<th>Por ración</th>
+<th>PDF</th>
+<th>❌</th>
+</tr>
+</thead>
+<tbody id="tablaRecetas"></tbody>
+</table>
+</div>
+</div>
+
+<!-- INGREDIENTES -->
+<div id="ingredientes" class="pantalla">
+<div class="card">
+<input id="buscarIng" placeholder="Buscar ingrediente..." oninput="mostrarIng()">
+
+<div class="fila">
+<input id="nomIng" placeholder="Nombre ingrediente">
+<input id="hcIng" placeholder="Gramos corresponden a 10g de HC">
+</div>
+
+<button class="btn" onclick="addIng()">Añadir</button>
+
+<table>
+<thead>
+<tr>
+<th>Ingrediente</th>
+<th>Gramos corresponden a 10g de HC</th>
+<th>❌</th>
+</tr>
+</thead>
+<tbody id="tablaIng"></tbody>
+</table>
+</div>
+</div>
+
+<script>
+
+/* 🔥 TU JS ORIGINAL EXACTO */
+
+let ingredientes = JSON.parse(localStorage.getItem('ing')) || {};
+let recetas = JSON.parse(localStorage.getItem('rec')) || [];
+
+let pendientes = [];
+let datosTemp = null;
+
+function guardar(){
+ localStorage.setItem('ing', JSON.stringify(ingredientes));
+ localStorage.setItem('rec', JSON.stringify(recetas));
+}
+
+function ir(p){
+ document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));
+ document.getElementById(p).classList.add('activa');
+ mostrarRecetas();
+ mostrarIng();
+}
+
+function limpiar(l){
+ return l.toLowerCase().replace('g','').replace('ml','').trim();
+}
+
+function calcular(){
+let nombre=document.getElementById('nombre').value.trim();
+let personas=parseFloat(document.getElementById('personas').value);
+let lineas=document.getElementById('texto').value.split('\n');
+
+if(!nombre||!personas){alert("Faltan datos");return;}
+
+pendientes=[];
+let lista=[];
+
+lineas.forEach(l=>{
+ l=limpiar(l);
+ if(!l) return;
+
+ let p=l.split(/\s+/);
+ let nom=p[0];
+ let cant=parseFloat(p[1]);
+
+ if(!nom||isNaN(cant)) return;
+
+ lista.push({nom,cant});
+ if(!ingredientes[nom]) pendientes.push(nom);
+});
+
+datosTemp={lista,nombre,personas};
+
+if(pendientes.length>0){preguntar();} else{calcularFinal();}
+}
+
+function preguntar(){
+if(pendientes.length===0){calcularFinal();return;}
+
+let ing=pendientes.shift();
+
+document.getElementById('pregunta').style.display='block';
+document.getElementById('pregunta').innerHTML=`
+<p>¿Cuántos gramos corresponden a 10g de HC para "${ing}"?</p>
+<input id="nuevo" onkeydown="if(event.key==='Enter') guardarIng('${ing}')">
+<button onclick="guardarIng('${ing}')">Guardar</button>
+<button onclick="preguntar()">Saltar</button>
+`;
+}
+
+function guardarIng(ing){
+let v=parseFloat(document.getElementById('nuevo').value);
+if(isNaN(v)){alert("Valor incorrecto");return;}
+ingredientes[ing]=v;
+guardar();
+preguntar();
+}
+
+function calcularFinal(){
+
+document.getElementById('pregunta').style.display='none';
+
+let total=0;
+
+datosTemp.lista.forEach(i=>{
+ if(ingredientes[i.nom]){
+  i.hc=(i.cant/ingredientes[i.nom])*10;
+  total+=i.hc;
+ }
+});
+
+let porPersona=total/datosTemp.personas;
+
+recetas.push({
+ nombre:datosTemp.nombre,
+ total,
+ pp:porPersona,
+ lista:datosTemp.lista,
+ personas:datosTemp.personas
+});
+
+guardar();
+
+document.getElementById('nombre').value='';
+document.getElementById('texto').value='';
+document.getElementById('personas').value='';
+
+ir('recetas');
+}
+
+function mostrarRecetas(){
+let t=document.getElementById('tablaRecetas');
+let filtro=document.getElementById('buscarRec').value.toLowerCase();
+t.innerHTML='';
+
+recetas
+.sort((a,b)=>a.nombre.localeCompare(b.nombre, undefined, {numeric:true}))
+.filter(r=>r.nombre.toLowerCase().includes(filtro))
+.forEach((r,i)=>{
+t.innerHTML+=`
+<tr>
+<td>
+<div class="edit">
+<span id="rec-${i}">${r.nombre}</span>
+<button class="lapiz" onclick="editarTexto('rec-${i}', ${i}, 'rec')">✏️</button>
+</div>
+</td>
+<td>${r.total.toFixed(2)}</td>
+<td>${r.pp.toFixed(2)}</td>
+<td><button class="btn" onclick="pdf(${i})">PDF</button></td>
+<td><button class="btn-rojo" onclick="delRec(${i})">❌</button></td>
+</tr>`;
+});
+}
+
+function mostrarIng(){
+let t=document.getElementById('tablaIng');
+let filtro=document.getElementById('buscarIng').value.toLowerCase();
+t.innerHTML='';
+
+Object.keys(ingredientes)
+.filter(i=>i.toLowerCase().includes(filtro))
+.forEach(i=>{
+t.innerHTML+=`
+<tr>
+<td>
+<div class="edit">
+<span id="ing-${i}">${i}</span>
+<button class="lapiz" onclick="editarTexto('ing-${i}','${i}','ing')">✏️</button>
+</div>
+</td>
+
+<td>
+<div class="edit">
+<span id="val-${i}">${ingredientes[i]}</span>
+<button class="lapiz" onclick="editarTexto('val-${i}','${i}','val')">✏️</button>
+</div>
+</td>
+
+<td><button class="btn-rojo" onclick="delIng('${i}')">❌</button></td>
+</tr>`;
+});
+}
+
+function editarTexto(id, clave, tipo){
+let span=document.getElementById(id);
+let valor=span.innerText;
+span.innerHTML=`<input value="${valor}" onblur="guardarEdit(this,'${id}','${clave}','${tipo}')" autofocus>`;
+}
+
+function guardarEdit(input,id,clave,tipo){
+let nuevo=input.value.trim();
+
+if(tipo==='rec'){recetas[clave].nombre=nuevo;}
+if(tipo==='ing'){ingredientes[nuevo]=ingredientes[clave];delete ingredientes[clave];}
+if(tipo==='val'){ingredientes[clave]=parseFloat(nuevo);}
+
+guardar();
+mostrarRecetas();
+mostrarIng();
+}
+
+function delRec(i){
+recetas.splice(i,1);
+guardar();
+mostrarRecetas();
+}
+
+function delIng(i){
+delete ingredientes[i];
+guardar();
+mostrarIng();
+}
+
+function addIng(){
+let n=document.getElementById('nomIng').value.trim();
+let v=parseFloat(document.getElementById('hcIng').value);
+if(!n||isNaN(v)) return;
+ingredientes[n]=v;
+guardar();
+mostrarIng();
+}
+
+/* 🔥 PDF ORIGINAL SIN TOCAR */
+function pdf(i){
+
+let r = recetas[i];
+
+let contenido = `
+<html>
+<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
+
+<div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
+${r.nombre}
+</div>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<tr>
+<td style="border:1px solid black;text-align:center;">Ingredientes</td>
+<td style="border:1px solid black;text-align:center;">Cantidad</td>
+<td style="border:1px solid black;text-align:center;">Hidratos Carbono</td>
+</tr>
+
+${r.lista.map(x=>`
+<tr>
+<td style="border:1px solid black;text-align:center;">${x.nom.charAt(0).toUpperCase()+x.nom.slice(1)}</td>
+<td style="border:1px solid black;text-align:center;">${x.cant}</td>
+<td style="border:1px solid black;text-align:center;">${x.hc ? x.hc.toFixed(2) : ""}</td>
+</tr>
+`).join("")}
+
+</table>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Raciones</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.personas}</td>
+</tr>
+</table>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;">
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.total.toFixed(2)}</td>
+</tr>
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono por Ración</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.pp.toFixed(2)}</td>
+</tr>
+</table>
+
+</body>
+</html>
+`;
+
+let w = window.open("", "_blank");
+w.document.write(contenido);
+w.document.close();
+w.print();
+}
+
+mostrarRecetas();
+mostrarIng();
+
+</script>
+
+</body>
+</html>
+index html

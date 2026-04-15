@@ -29,12 +29,12 @@ display:flex;
 justify-content:center;
 gap:10px;
 background:#2c2c3e;
-padding:10px;
+p:10px;
 flex-wrap:wrap;
 }
 
 nav button{
-padding:10px 15px;
+p:10px 15px;
 border:none;
 border-radius:8px;
 background:white;
@@ -48,13 +48,13 @@ background:#ddd;
 }
 
 /* PANTALLAS */
-.pantalla{display:none;padding:20px}
+.pantalla{display:none;p:20px}
 .activa{display:block}
 
 /* CARD */
 .card{
 background:white;
-padding:20px;
+p:20px;
 border-radius:15px;
 max-width:900px;
 margin:auto;
@@ -64,7 +64,7 @@ box-shadow:0 5px 15px rgba(0,0,0,0.1);
 /* INPUTS */
 input, textarea{
 width:100%;
-padding:10px;
+p:10px;
 margin:5px 0;
 border-radius:8px;
 border:1px solid #ccc;
@@ -87,7 +87,7 @@ flex:1;
 background:#4caf50;
 color:white;
 border:none;
-padding:8px 12px;
+p:8px 12px;
 border-radius:8px;
 cursor:pointer;
 font-weight:bold;
@@ -99,7 +99,7 @@ font-weight:bold;
 background:#e74c3c;
 color:white;
 border:none;
-padding:8px;
+p:8px;
 border-radius:8px;
 cursor:pointer;
 }
@@ -114,7 +114,7 @@ margin-top:10px;
 }
 
 td,th{
-padding:10px;
+p:10px;
 border-bottom:1px solid #ddd;
 text-align:center;
 position:relative;
@@ -137,7 +137,7 @@ text-align:center;
 width:100%;
 box-sizing:border-box;
 text-align:center;
-padding-right:25px;
+p-right:25px;
 }
 
 .lapiz{
@@ -213,7 +213,7 @@ cursor:pointer;
 <input id="hcIng" placeholder="Gramos corresponden a 10g de HC">
 </div>
 
-<button class="btn" onclick="addIng()">Añadir</button>
+<button class="btn" onclick="()">Añadir</button>
 
 <table>
 <thead>
@@ -377,7 +377,7 @@ let contenido = `
 <html>
 <body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
 
-<div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
+<div style="border:1px solid black;p:9px;margin-bottom:40px;font-size:14px;">
 ${r.nombre}
 </div>
 
@@ -495,6 +495,9 @@ ingredientes[n]=v;
 guardar();
 guardarIngrediente(n, v);
 mostrarIng();
+}
+document.getElementById('nomIng').value = '';
+document.getElementById('hcIng').value = '';
 }
 
 async function cargarRecetas() {

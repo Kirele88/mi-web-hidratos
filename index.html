@@ -233,14 +233,14 @@ cursor:pointer;
 /* 🔥 TU JS ORIGINAL EXACTO */
 
 let ingredientes = JSON.parse(localStorage.getItem('ing')) || {};
-let recetas = [];
+let recetas = JSON.parse(localStorage.getItem('rec')) || [];
 
 let pendientes = [];
 let datosTemp = null;
 
 function guardar(){
  localStorage.setItem('ing', JSON.stringify(ingredientes));
- // localStorage eliminado para recetas
+ localStorage.setItem('rec', JSON.stringify(recetas));
 }
 
 function ir(p){

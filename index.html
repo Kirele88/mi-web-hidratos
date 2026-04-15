@@ -344,7 +344,13 @@ document.getElementById('personas').value='';
 ir('recetas');
 }
 async function guardarReceta(receta) {
-  await addDoc(collection(db, "recetas"), receta);
+  try {
+    console.log("Guardando en Firebase...");
+    await addDoc(collection(db, "recetas"), receta);
+    console.log("✅ Guardado correctamente");
+  } catch (e) {
+    console.error("❌ Error Firebase:", e);
+  }
 }
 function mostrarRecetas(){
 let t=document.getElementById('tablaRecetas');
@@ -506,9 +512,6 @@ async function cargarRecetas() {
 
   mostrarRecetas();
 }
-setTimeout(() => {
-  cargarRecetas();
-}, 1000);
 
 mostrarIng();
 
@@ -534,6 +537,7 @@ window.db = db;
 window.addDoc = addDoc;
 window.collection = collection;
 window.getDocs = getDocs;
+cargarRecetas();
 </script>
  
 </body>

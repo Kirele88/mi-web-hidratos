@@ -518,21 +518,28 @@ w.print();
 }
 async function cargarRecetas() {
   const querySnapshot = await getDocs(collection(db, "recetas"));
-  recetas = [];
+  // recetas = []; ❌ BORRAR ESTA LINEA
 
   querySnapshot.forEach((doc) => {
-    recetas.push(doc.data());
+    let data = doc.data();
+
+// evitar duplicados
+if(!recetas.some(r => r.nombre === data.nombre)){
+  recetas.push(data);
+}
   });
 
   mostrarRecetas();
 }
 async function cargarIngredientes() {
   const querySnapshot = await getDocs(collection(db, "ingredientes"));
-  ingredientes = {};
+  // NO borrar los locales
 
   querySnapshot.forEach((doc) => {
     let data = doc.data();
-    ingredientes[data.nombre] = data.valor;
+    if(!ingredientes[data.nombre]){
+  ingredientes[data.nombre] = data.valor;
+}
   });
 
   mostrarIng();

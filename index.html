@@ -233,14 +233,14 @@ cursor:pointer;
 /* 🔥 TU JS ORIGINAL EXACTO */
 
 let ingredientes = JSON.parse(localStorage.getItem('ing')) || {};
-let recetas = JSON.parse(localStorage.getItem('rec')) || [];
+let recetas = [];
 
 let pendientes = [];
 let datosTemp = null;
 
 function guardar(){
  localStorage.setItem('ing', JSON.stringify(ingredientes));
- localStorage.setItem('rec', JSON.stringify(recetas));
+ // localStorage eliminado para recetas
 }
 
 function ir(p){
@@ -327,6 +327,13 @@ recetas.push({
  lista:datosTemp.lista,
  personas:datosTemp.personas
 });
+guardarReceta({
+ nombre:datosTemp.nombre,
+ total,
+ pp:porPersona,
+ lista:datosTemp.lista,
+ personas:datosTemp.personas
+});
 
 guardar();
 
@@ -336,7 +343,9 @@ document.getElementById('personas').value='';
 
 ir('recetas');
 }
-
+async function guardarReceta(receta) {
+  await addDoc(collection(db, "recetas"), receta);
+}
 function mostrarRecetas(){
 let t=document.getElementById('tablaRecetas');
 let filtro=document.getElementById('buscarRec').value.toLowerCase();
@@ -487,8 +496,17 @@ w.document.write(contenido);
 w.document.close();
 w.print();
 }
+async function cargarRecetas() {
+  const querySnapshot = await getDocs(collection(db, "recetas"));
+  recetas = [];
 
-mostrarRecetas();
+  querySnapshot.forEach((doc) => {
+    recetas.push(doc.data());
+  });
+
+  mostrarRecetas();
+}
+cargarRecetas();
 mostrarIng();
 
 </script>

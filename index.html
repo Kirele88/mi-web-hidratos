@@ -490,12 +490,15 @@ async function delIng(i){
 function addIng(){
 let n=document.getElementById('nomIng').value.trim();
 let v=parseFloat(document.getElementById('hcIng').value);
+
 if(!n||isNaN(v)) return;
+
 ingredientes[n]=v;
 guardar();
 guardarIngrediente(n, v);
 mostrarIng();
-}
+
+/* LIMPIAR INPUTS */
 document.getElementById('nomIng').value = '';
 document.getElementById('hcIng').value = '';
 }

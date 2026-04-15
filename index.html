@@ -232,13 +232,13 @@ cursor:pointer;
 
 /* 🔥 TU JS ORIGINAL EXACTO */
 
-let ingredientes = JSON.parse(localStorage.getItem('ing')) || {};
-let recetas = JSON.parse(localStorage.getItem('rec')) || [];
+let ingredientes = {};
+let recetas = [];
 
 let pendientes = [];
 let datosTemp = null;
 
-function guardar(){
+function guardar(){}
  localStorage.setItem('ing', JSON.stringify(ingredientes));
  localStorage.setItem('rec', JSON.stringify(recetas));
 }

@@ -6,495 +6,237 @@
 
 <style>
 *{box-sizing:border-box}
-
-body{
-font-family:Arial;
-margin:0;
-background:#f0f2f5;
-}
-
-/* HEADER */
-header{
-background:#1e1e2f;
-color:white;
-padding:20px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
-}
-
-/* NAV */
-nav{
-display:flex;
-justify-content:center;
-gap:10px;
-background:#2c2c3e;
-padding:10px;
-flex-wrap:wrap;
-}
-
-nav button{
-padding:10px 15px;
-border:none;
-border-radius:8px;
-background:white;
-cursor:pointer;
-font-weight:bold;
-transition:0.2s;
-}
-
-nav button:hover{
-background:#ddd;
-}
-
-/* PANTALLAS */
+body{font-family:Arial;margin:0;background:#f0f2f5;}
+header{background:#1e1e2f;color:white;padding:20px;text-align:center;font-size:22px;font-weight:bold;}
+nav{display:flex;justify-content:center;gap:10px;background:#2c2c3e;padding:10px;flex-wrap:wrap;}
+nav button{padding:10px 15px;border:none;border-radius:8px;background:white;cursor:pointer;font-weight:bold;}
 .pantalla{display:none;padding:20px}
 .activa{display:block}
-
-/* CARD */
-.card{
-background:white;
-padding:20px;
-border-radius:15px;
-max-width:900px;
-margin:auto;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-
-/* INPUTS */
-input, textarea{
-width:100%;
-padding:10px;
-margin:5px 0;
-border-radius:8px;
-border:1px solid #ccc;
-}
-
+.card{background:white;padding:20px;border-radius:15px;max-width:900px;margin:auto;}
+input, textarea{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc;}
 textarea{height:120px}
-
-/* FILA */
-.fila{
-display:flex;
-gap:10px;
-}
-
-.fila input{
-flex:1;
-}
-
-/* BOTONES */
-.btn{
-background:#4caf50;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-}
-
-.btn:hover{background:#45a049}
-
-.btn-rojo{
-background:#e74c3c;
-color:white;
-border:none;
-padding:8px;
-border-radius:8px;
-cursor:pointer;
-}
-
-.btn-rojo:hover{background:#c0392b}
-
-/* TABLAS */
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-}
-
-td,th{
-padding:10px;
-border-bottom:1px solid #ddd;
-text-align:center;
-position:relative;
-}
-
-/* EDITAR */
-.edit{
-position:relative;
-width:100%;
-text-align:center;
-}
-
-.edit span{
-display:block;
-width:100%;
-text-align:center;
-}
-
-.edit input{
-width:100%;
-box-sizing:border-box;
-text-align:center;
-padding-right:25px;
-}
-
-.lapiz{
-position:absolute;
-right:5px;
-top:50%;
-transform:translateY(-50%);
-background:none;
-border:none;
-cursor:pointer;
-}
+.btn{background:#4caf50;color:white;border:none;padding:8px;border-radius:8px;cursor:pointer;}
+.btn-rojo{background:#e74c3c;color:white;border:none;padding:8px;border-radius:8px;cursor:pointer;}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+td,th{padding:10px;border-bottom:1px solid #ddd;text-align:center;}
 </style>
 </head>
 
 <body>
 
-<header>🍽️ Gestor de Hidratos de Carbono</header>
+<header>🍽️ Gestor de Hidratos</header>
 
 <nav>
 <button onclick="ir('inicio')">INICIO</button>
-<button onclick="ir('crear')">AÑADIR RECETAS</button>
-<button onclick="ir('recetas')">VER RECETAS</button>
-<button onclick="ir('ingredientes')">VER INGREDIENTES</button>
+<button onclick="ir('crear')">AÑADIR</button>
+<button onclick="ir('recetas')">RECETAS</button>
+<button onclick="ir('ingredientes')">INGREDIENTES</button>
 </nav>
 
-<!-- INICIO -->
-<div id="inicio" class="pantalla activa">
-<div class="card">
-<p>Esta herramienta está diseñada para calcular los hidratos de carbono de recetas de forma rápida y sencilla.</p>
-<p>Introduce los ingredientes junto con sus cantidades y obtendrás automáticamente el total de hidratos de carbono.</p>
-<p>Si utilizas un alimento que no está registrado, podrás añadirlo fácilmente para usarlo en futuras recetas.</p>
-<p>Además, puedes guardar tus recetas y exportarlas en formato PDF.</p>
-</div>
-</div>
+<div id="inicio" class="pantalla activa"><div class="card">App funcionando con Firebase</div></div>
 
-<!-- CREAR -->
 <div id="crear" class="pantalla">
 <div class="card">
 <input id="nombre" placeholder="Nombre receta">
 <textarea id="texto"></textarea>
 <input id="personas" type="number" placeholder="Raciones">
 <button class="btn" onclick="calcular()">Calcular</button>
-<div id="pregunta" style="display:none;"></div>
+<div id="pregunta"></div>
 </div>
 </div>
 
-<!-- RECETAS -->
 <div id="recetas" class="pantalla">
 <div class="card">
-<input id="buscarRec" placeholder="Buscar receta..." oninput="mostrarRecetas()">
 <table>
-<thead>
-<tr>
-<th>Nombre</th>
-<th>Total HC</th>
-<th>Por ración</th>
-<th>PDF</th>
-<th>❌</th>
-</tr>
-</thead>
+<thead><tr><th>Nombre</th><th>Total</th><th>PP</th><th>PDF</th><th>X</th></tr></thead>
 <tbody id="tablaRecetas"></tbody>
 </table>
 </div>
 </div>
 
-<!-- INGREDIENTES -->
 <div id="ingredientes" class="pantalla">
 <div class="card">
-<input id="buscarIng" placeholder="Buscar ingrediente..." oninput="mostrarIng()">
-
-<div class="fila">
-<input id="nomIng" placeholder="Nombre ingrediente">
-<input id="hcIng" placeholder="Gramos corresponden a 10g de HC">
-</div>
-
-<button class="btn" onclick="addIng()">Añadir</button>
-
-<table>
-<thead>
-<tr>
-<th>Ingrediente</th>
-<th>Gramos corresponden a 10g de HC</th>
-<th>❌</th>
-</tr>
-</thead>
-<tbody id="tablaIng"></tbody>
-</table>
+<input id="nomIng">
+<input id="hcIng">
+<button onclick="addIng()">Añadir</button>
+<table><tbody id="tablaIng"></tbody></table>
 </div>
 </div>
 
 <script>
-
 let ingredientes = {};
 let recetas = [];
-
 let pendientes = [];
 let datosTemp = null;
 
-/* ✅ ARREGLADO */
-function guardar(){
-}
+function guardar(){}
 
 function ir(p){
- document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));
- document.getElementById(p).classList.add('activa');
- mostrarRecetas();
- mostrarIng();
-}
-
-function limpiar(l){
- return l.toLowerCase().replace('g','').replace('ml','').trim();
+document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));
+document.getElementById(p).classList.add('activa');
+mostrarRecetas();mostrarIng();
 }
 
 function calcular(){
-let nombre=document.getElementById('nombre').value.trim();
+let nombre=nombreInput();
 let personas=parseFloat(document.getElementById('personas').value);
 let lineas=document.getElementById('texto').value.split('\n');
 
-if(!nombre||!personas){alert("Faltan datos");return;}
-
-pendientes=[];
-let lista=[];
+pendientes=[];let lista=[];
 
 lineas.forEach(l=>{
- l=limpiar(l);
- if(!l) return;
+l=l.trim();if(!l)return;
 
- let p=l.split(/\s+/);
- let nom=p[0];
- let cant=parseFloat(p[1]);
+let partes=l.split(" ");
+let cant=parseFloat(partes.pop());
+let nom=partes.join(" ");
 
- if(!nom||isNaN(cant)) return;
+if(!nom||isNaN(cant))return;
 
- lista.push({nom,cant});
- if(!ingredientes[nom]) pendientes.push(nom);
+lista.push({nom,cant});
+if(!ingredientes[nom])pendientes.push(nom);
 });
 
 datosTemp={lista,nombre,personas};
+pendientes.length>0?preguntar():calcularFinal();
+}
 
-if(pendientes.length>0){preguntar();} else{calcularFinal();}
+function nombreInput(){
+return document.getElementById('nombre').value.trim();
 }
 
 function preguntar(){
-if(pendientes.length===0){calcularFinal();return;}
-
 let ing=pendientes.shift();
-
-document.getElementById('pregunta').style.display='block';
-document.getElementById('pregunta').innerHTML=`
-<p>¿Cuántos gramos corresponden a 10g de HC para "${ing}"?</p>
-<input id="nuevo" onkeydown="if(event.key==='Enter') guardarIng('${ing}')">
-<button onclick="guardarIng('${ing}')">Guardar</button>
-<button onclick="preguntar()">Saltar</button>
-`;
+document.getElementById('pregunta').innerHTML=
+`<input id="nuevo"><button onclick="guardarIng('${ing}')">OK</button>`;
 }
 
 function guardarIng(ing){
 let v=parseFloat(document.getElementById('nuevo').value);
-if(isNaN(v)){alert("Valor incorrecto");return;}
 ingredientes[ing]=v;
-guardar();
-guardarIngrediente(ing, v);
+guardarIngrediente(ing,v);
 preguntar();
 }
 
 function calcularFinal(){
-
-document.getElementById('pregunta').style.display='none';
-
 let total=0;
 
 datosTemp.lista.forEach(i=>{
- if(ingredientes[i.nom]){
-  i.hc=(i.cant/ingredientes[i.nom])*10;
-  total+=i.hc;
- }
+i.hc=(i.cant/ingredientes[i.nom])*10;
+total+=i.hc;
 });
 
-let porPersona=total/datosTemp.personas;
+let r={
+nombre:datosTemp.nombre,
+total,
+pp:total/datosTemp.personas,
+lista:datosTemp.lista,
+personas:datosTemp.personas
+};
 
-recetas.push({
- nombre:datosTemp.nombre,
- total,
- pp:porPersona,
- lista:datosTemp.lista,
- personas:datosTemp.personas
-});
-
-guardarReceta({
- nombre:datosTemp.nombre,
- total,
- pp:porPersona,
- lista:datosTemp.lista,
- personas:datosTemp.personas
-});
-
-guardar();
-
-document.getElementById('nombre').value='';
-document.getElementById('texto').value='';
-document.getElementById('personas').value='';
-
+recetas.push(r);
+guardarReceta(r);
 ir('recetas');
 }
 
-async function guardarReceta(receta) {
-  await addDoc(collection(db, "recetas"), receta);
+async function guardarReceta(r){
+await addDoc(collection(db,"recetas"),r);
 }
 
-async function guardarIngrediente(nombre, valor) {
-  await addDoc(collection(db, "ingredientes"), {
-    nombre: nombre,
-    valor: valor
-  });
+async function guardarIngrediente(n,v){
+await addDoc(collection(db,"ingredientes"),{nombre:n,valor:v});
 }
 
 function mostrarRecetas(){
-let t=document.getElementById('tablaRecetas');
-t.innerHTML='';
-
+let t=document.getElementById('tablaRecetas');t.innerHTML='';
 recetas.forEach((r,i)=>{
 t.innerHTML+=`
 <tr>
 <td>${r.nombre}</td>
 <td>${r.total.toFixed(2)}</td>
 <td>${r.pp.toFixed(2)}</td>
-<td><button class="btn" onclick="pdf(${i})">PDF</button></td>
-<td><button class="btn-rojo" onclick="delRec(${i})">❌</button></td>
+<td><button onclick="pdf(${i})">PDF</button></td>
+<td><button onclick="delRec(${i})">X</button></td>
 </tr>`;
 });
 }
 
 function mostrarIng(){
-let t=document.getElementById('tablaIng');
-t.innerHTML='';
-
+let t=document.getElementById('tablaIng');t.innerHTML='';
 Object.keys(ingredientes).forEach(i=>{
-t.innerHTML+=`
-<tr>
-<td>${i}</td>
-<td>${ingredientes[i]}</td>
-<td><button class="btn-rojo" onclick="delIng('${i}')">❌</button></td>
-</tr>`;
+t.innerHTML+=`<tr><td>${i}</td><td>${ingredientes[i]}</td><td><button onclick="delIng('${i}')">X</button></td></tr>`;
 });
 }
 
 async function delRec(i){
-  let nombre = recetas[i].nombre;
+let nombre=recetas[i].nombre;
+recetas.splice(i,1);mostrarRecetas();
 
-  console.log("Borrando receta:", nombre);
-
-  // borrar en pantalla
-  recetas.splice(i,1);
-  mostrarRecetas();
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "recetas"));
-
-    for (const docu of querySnapshot.docs) {
-      let data = docu.data();
-
-      if (data.nombre === nombre) {
-        await deleteDoc(docu.ref);
-      }
-    }
-
-  } catch(e){
-    console.error("Error:", e);
-  }
+const q=await getDocs(collection(db,"recetas"));
+q.forEach(doc=>{
+if(doc.data().nombre===nombre)deleteDoc(doc.ref);
+});
 }
 
 async function delIng(i){
-  console.log("Borrando:", i);
+delete ingredientes[i];mostrarIng();
 
-  // borrar en pantalla
-  delete ingredientes[i];
-  mostrarIng();
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "ingredientes"));
-
-    for (const docu of querySnapshot.docs) {
-      let data = docu.data();
-
-      if (data.nombre === i) {
-        await deleteDoc(docu.ref);
-      }
-    }
-
-  } catch(e){
-    console.error("Error:", e);
-  }
+const q=await getDocs(collection(db,"ingredientes"));
+q.forEach(doc=>{
+if(doc.data().nombre===i)deleteDoc(doc.ref);
+});
 }
 
 function addIng(){
 let n=document.getElementById('nomIng').value.trim();
 let v=parseFloat(document.getElementById('hcIng').value);
-if(!n||isNaN(v)) return;
+if(!n||isNaN(v))return;
+
 ingredientes[n]=v;
-guardar();
-guardarIngrediente(n, v);
+guardarIngrediente(n,v);
 mostrarIng();
+
+document.getElementById('nomIng').value='';
+document.getElementById('hcIng').value='';
 }
 
-async function cargarRecetas() {
-  const querySnapshot = await getDocs(collection(db, "recetas"));
-  querySnapshot.forEach((doc) => {
-    let data = doc.data();
-    if(!recetas.some(r => r.nombre === data.nombre)){
-      recetas.push(data);
-    }
-  });
-  mostrarRecetas();
+function pdf(i){
+let r=recetas[i];
+let w=window.open();
+w.document.write(`<h1>${r.nombre}</h1><p>${r.total}</p>`);
+w.print();
 }
 
-async function cargarIngredientes() {
-  console.log("🔥 Cargando ingredientes desde Firebase");
+async function cargar(){
+let r=await getDocs(collection(db,"recetas"));
+r.forEach(d=>recetas.push(d.data()));
 
-  const querySnapshot = await getDocs(collection(db, "ingredientes"));
+let i=await getDocs(collection(db,"ingredientes"));
+i.forEach(d=>ingredientes[d.data().nombre]=d.data().valor);
 
-  querySnapshot.forEach((doc) => {
-    let data = doc.data();
-    console.log("Ingrediente:", data); // 👈 IMPORTANTE
-    ingredientes[data.nombre] = data.valor;
-  });
-
-  mostrarIng();
+mostrarRecetas();mostrarIng();
 }
 </script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, addDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-const firebaseConfig = {
- 
-  apiKey: "AIzaSyBozzwT9hTW8TP1NCUWkKDJIN1JxQox_vY",
-  authDomain: "mi-web-hidratos.firebaseapp.com",
-  projectId: "mi-web-hidratos",
-  storageBucket: "mi-web-hidratos.firebasestorage.app",
-  messagingSenderId: "75949902551",
-  appId: "1:75949902551:web:c88713d1747ed1ea153e92"
-};
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp({
+apiKey:"AIza...",
+authDomain:"mi-web-hidratos.firebaseapp.com",
+projectId:"mi-web-hidratos"
+});
 
-window.db = db;
-window.addDoc = addDoc;
-window.collection = collection;
-window.getDocs = getDocs;
-window.deleteDoc = deleteDoc;
+const db=getFirestore(app);
 
-setTimeout(() => {
-  cargarRecetas();
-  cargarIngredientes();
-}, 500);
+window.db=db;
+window.addDoc=addDoc;
+window.collection=collection;
+window.getDocs=getDocs;
+window.deleteDoc=deleteDoc;
 
+cargar();
 </script>
 
 </body>

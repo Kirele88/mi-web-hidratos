@@ -521,12 +521,52 @@ async function cargarIngredientes() {
 
   querySnapshot.forEach((doc) => {
     let data = doc.data();
-    console.log("Ingrediente:", data); // 👈 IMPORTANTE
+    console.log("Ingrediente:", data);
     ingredientes[data.nombre] = data.valor;
   });
 
   mostrarIng();
 }
+
+/* 👇 PEGA ESTO JUSTO AQUÍ */
+document.addEventListener("keydown", function(e){
+
+// ENTER
+if(e.key === "Enter"){
+
+let activa = document.querySelector(".pantalla.activa")?.id;
+
+// NO interferir con textarea
+if(document.activeElement.tagName === "TEXTAREA") return;
+
+// INGREDIENTES
+if(activa === "ingredientes"){
+addIng();
+return;
+}
+
+// CREAR RECETA
+if(activa === "crear"){
+calcular();
+return;
+}
+
+// PREGUNTA (guardar ingrediente)
+if(document.getElementById("nuevo")){
+document.querySelector("#pregunta button").click();
+return;
+}
+
+}
+
+// SHIFT = SALTAR
+if(e.key === "Shift"){
+if(document.getElementById("pregunta").style.display !== "none"){
+preguntar();
+}
+}
+
+});
 </script>
 
 <script type="module">

@@ -369,7 +369,62 @@ t.innerHTML+=`
 </tr>`;
 });
 }
+function pdf(i){
 
+let r = recetas[i];
+
+let contenido = `
+<html>
+<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
+
+<div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
+${r.nombre}
+</div>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<tr>
+<td style="border:1px solid black;text-align:center;">Ingredientes</td>
+<td style="border:1px solid black;text-align:center;">Cantidad</td>
+<td style="border:1px solid black;text-align:center;">Hidratos Carbono</td>
+</tr>
+
+${r.lista.map(x=>`
+<tr>
+<td style="border:1px solid black;text-align:center;">${x.nom.charAt(0).toUpperCase()+x.nom.slice(1)}</td>
+<td style="border:1px solid black;text-align:center;">${x.cant}</td>
+<td style="border:1px solid black;text-align:center;">${x.hc ? x.hc.toFixed(2) : ""}</td>
+</tr>
+`).join("")}
+
+</table>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Raciones</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.personas}</td>
+</tr>
+</table>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;">
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.total.toFixed(2)}</td>
+</tr>
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono por Ración</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.pp.toFixed(2)}</td>
+</tr>
+</table>
+
+</body>
+</html>
+`;
+
+let w = window.open("", "_blank");
+w.document.write(contenido);
+w.document.close();
+w.print();
+}
 function mostrarIng(){
 let t=document.getElementById('tablaIng');
 t.innerHTML='';

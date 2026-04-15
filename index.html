@@ -384,10 +384,29 @@ t.innerHTML+=`
 });
 }
 
-function delRec(i){
-recetas.splice(i,1);
-guardar();
-mostrarRecetas();
+async function delRec(i){
+  let nombre = recetas[i].nombre;
+
+  console.log("Borrando receta:", nombre);
+
+  // borrar en pantalla
+  recetas.splice(i,1);
+  mostrarRecetas();
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "recetas"));
+
+    for (const docu of querySnapshot.docs) {
+      let data = docu.data();
+
+      if (data.nombre === nombre) {
+        await deleteDoc(docu.ref);
+      }
+    }
+
+  } catch(e){
+    console.error("Error:", e);
+  }
 }
 
 async function delIng(i){

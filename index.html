@@ -418,18 +418,20 @@ async function cargarRecetas() {
 }
 
 async function cargarIngredientes() {
+  console.log("🔥 Cargando ingredientes desde Firebase");
+
   const querySnapshot = await getDocs(collection(db, "ingredientes"));
 
-  ingredientes = {}; // 🔥 IMPORTANTE: resetear
+  ingredientes = {};
 
   querySnapshot.forEach((doc) => {
     let data = doc.data();
+    console.log("Ingrediente:", data); // 👈 IMPORTANTE
     ingredientes[data.nombre] = data.valor;
   });
 
   mostrarIng();
 }
-
 </script>
 
 <script type="module">

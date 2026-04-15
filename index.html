@@ -266,8 +266,8 @@ lineas.forEach(l=>{
  if(!l) return;
 
  let partes = l.split(" ");
-let cant = parseFloat(partes.pop()); // último valor = cantidad
-let nom = partes.join(" "); // todo lo demás = nombre
+ let cant = parseFloat(partes.pop());
+ let nom = partes.join(" ");
 
  if(!nom||isNaN(cant)) return;
 

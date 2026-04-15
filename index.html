@@ -390,10 +390,27 @@ guardar();
 mostrarRecetas();
 }
 
-function delIng(i){
-delete ingredientes[i];
-guardar();
-mostrarIng();
+async function delIng(i){
+  console.log("Borrando:", i);
+
+  // borrar en pantalla
+  delete ingredientes[i];
+  mostrarIng();
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "ingredientes"));
+
+    for (const docu of querySnapshot.docs) {
+      let data = docu.data();
+
+      if (data.nombre === i) {
+        await deleteDoc(docu.ref);
+      }
+    }
+
+  } catch(e){
+    console.error("Error:", e);
+  }
 }
 
 function addIng(){
@@ -434,8 +451,7 @@ async function cargarIngredientes() {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, addDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import { getFirestore, addDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBozzwT9hTW8TP1NCUWkKDJIN1JxQox_vY",
   authDomain: "mi-web-hidratos.firebaseapp.com",
@@ -452,6 +468,7 @@ window.db = db;
 window.addDoc = addDoc;
 window.collection = collection;
 window.getDocs = getDocs;
+window.deleteDoc = deleteDoc;
 
 setTimeout(() => {
   cargarRecetas();

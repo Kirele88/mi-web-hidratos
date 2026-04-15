@@ -265,9 +265,9 @@ lineas.forEach(l=>{
  l=limpiar(l);
  if(!l) return;
 
- let p=l.split(/\s+/);
- let nom=p[0];
- let cant=parseFloat(p[1]);
+ let partes = l.split(" ");
+let cant = parseFloat(partes.pop()); // último valor = cantidad
+let nom = partes.join(" "); // todo lo demás = nombre
 
  if(!nom||isNaN(cant)) return;
 

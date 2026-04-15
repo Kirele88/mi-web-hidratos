@@ -506,7 +506,10 @@ async function cargarRecetas() {
 
   mostrarRecetas();
 }
-cargarRecetas();
+setTimeout(() => {
+  cargarRecetas();
+}, 1000);
+
 mostrarIng();
 
 </script>

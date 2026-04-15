@@ -302,6 +302,7 @@ let v=parseFloat(document.getElementById('nuevo').value);
 if(isNaN(v)){alert("Valor incorrecto");return;}
 ingredientes[ing]=v;
 guardar();
+guardarIngrediente(ing, v);
 preguntar();
 }
 
@@ -352,6 +353,18 @@ async function guardarReceta(receta) {
     console.error("❌ Error Firebase:", e);
   }
 }
+async function guardarIngrediente(nombre, valor) {
+  try {
+    await addDoc(collection(db, "ingredientes"), {
+      nombre: nombre,
+      valor: valor
+    });
+    console.log("Ingrediente guardado");
+  } catch (e) {
+    console.error("Error ingrediente:", e);
+  }
+}
+ 
 function mostrarRecetas(){
 let t=document.getElementById('tablaRecetas');
 let filtro=document.getElementById('buscarRec').value.toLowerCase();
@@ -442,6 +455,7 @@ let v=parseFloat(document.getElementById('hcIng').value);
 if(!n||isNaN(v)) return;
 ingredientes[n]=v;
 guardar();
+guardarIngrediente(n, v);
 mostrarIng();
 }
 
@@ -512,8 +526,20 @@ async function cargarRecetas() {
 
   mostrarRecetas();
 }
+async function cargarIngredientes() {
+  const querySnapshot = await getDocs(collection(db, "ingredientes"));
+  ingredientes = {};
 
-mostrarIng();
+  querySnapshot.forEach((doc) => {
+    let data = doc.data();
+    ingredientes[data.nombre] = data.valor;
+  });
+
+  mostrarIng();
+}
+
+cargarRecetas();
+cargarIngredientes();
 
 </script>
 <script type="module">

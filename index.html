@@ -403,13 +403,18 @@ let datosTemp = null;
 /* ✅ ARREGLADO */
 function guardar(){
  function toggleAyuda(){
+
 let caja = document.getElementById("ayudaReceta");
 
-if(caja.style.display === "none"){
+if(
+caja.style.display === "none" ||
+caja.style.display === ""
+){
 caja.style.display = "block";
 }else{
 caja.style.display = "none";
 }
+
 }
 }
 

@@ -862,7 +862,7 @@ window.registrar = async function () {
 
 console.log("clic registrar");
 
-await createUserWithEmailAndPassword(
+await window.createUserWithEmailAndPassword(
 window.auth,
 document.getElementById("mail").value,
 document.getElementById("pass").value
@@ -874,9 +874,7 @@ alert("Cuenta creada");
 
 window.entrar = async function () {
 
-console.log("clic entrar");
-
-await signInWithEmailAndPassword(
+await window.signInWithEmailAndPassword(
 window.auth,
 document.getElementById("mail").value,
 document.getElementById("pass").value
@@ -888,9 +886,7 @@ alert("Sesión iniciada");
 
 window.salir = async function () {
 
-console.log("clic salir");
-
-await signOut(window.auth);
+await window.signOut(window.auth);
 
 alert("Sesión cerrada");
 

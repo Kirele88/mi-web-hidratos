@@ -409,6 +409,7 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 
 let ingredientes = {};
 let recetas = [];
+let usuarioActual = null;
 
 let pendientes = [];
 let datosTemp = null;
@@ -531,7 +532,8 @@ guardarReceta({
  total,
  pp:porPersona,
  lista:datosTemp.lista,
- personas:datosTemp.personas
+ personas:datosTemp.personas,
+ tipo: recetaObj.tipo
 });
 
 guardar();
@@ -544,7 +546,11 @@ ir('recetas');
 }
 
 async function guardarReceta(receta) {
-  await addDoc(collection(db, "recetas"), receta);
+
+receta.uid = usuarioActual ? usuarioActual.uid : null;
+
+await addDoc(collection(db, "recetas"), receta);
+
 }
 
 async function guardarIngrediente(nombre, valor) {
@@ -742,21 +748,32 @@ document.getElementById('hcIng').value = '';
 }
 
 async function cargarRecetas() {
-  const querySnapshot = await getDocs(collection(db, "recetas"));
 
-  querySnapshot.forEach((doc) => {
-    let data = doc.data();
+recetas = [];
 
-    if(!data.tipo){
-      data.tipo = ["tus"];
-    }
+const querySnapshot = await getDocs(collection(db, "recetas"));
 
-    if(!recetas.some(r => r.nombre === data.nombre)){
-      recetas.push(data);
-    }
-  });
+querySnapshot.forEach((doc) => {
 
-  mostrarRecetas();
+let data = doc.data();
+
+let esMia =
+usuarioActual &&
+data.uid === usuarioActual.uid &&
+data.tipo &&
+data.tipo.includes("tus");
+
+let esOnline =
+data.tipo &&
+data.tipo.includes("online");
+
+if(esMia || esOnline){
+recetas.push(data);
+}
+
+});
+
+mostrarRecetas();
 }
 
 async function cargarIngredientes() {
@@ -874,11 +891,15 @@ alert("Cuenta creada");
 
 window.entrar = async function () {
 
-await window.signInWithEmailAndPassword(
+let res = await window.signInWithEmailAndPassword(
 window.auth,
 document.getElementById("mail").value,
 document.getElementById("pass").value
 );
+
+usuarioActual = res.user;
+
+await cargarRecetas();
 
 alert("Sesión iniciada");
 
@@ -887,6 +908,10 @@ alert("Sesión iniciada");
 window.salir = async function () {
 
 await window.signOut(window.auth);
+
+usuarioActual = null;
+recetas = [];
+mostrarRecetas();
 
 alert("Sesión cerrada");
 
@@ -936,7 +961,6 @@ window.getDocs = getDocs;
 window.deleteDoc = deleteDoc;
 
 setTimeout(() => {
-  cargarRecetas();
   cargarIngredientes();
 }, 500);
 

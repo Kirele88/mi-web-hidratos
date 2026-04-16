@@ -185,12 +185,12 @@ flex:1;
 /* BOTONES MAS BONITOS */
 .btn,
 .btn-rojo{
-padding:10px 16px;
+padding:8px 12px;
 border:none;
 border-radius:10px;
 cursor:pointer;
 font-weight:bold;
-font-size:14px;
+font-size:13px;
 transition:0.2s;
 box-shadow:0 4px 10px rgba(0,0,0,0.08);
 margin:3px;
@@ -225,6 +225,22 @@ font-size:14px;
  
 h2{
 clear:both;
+}
+
+.barraAcciones{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin:12px 0 18px 0;
+flex-wrap:wrap;
+}
+
+.izq,.der{
+display:flex;
+gap:8px;
+align-items:center;
+flex-wrap:wrap;
 }
  
 </style>
@@ -261,7 +277,9 @@ clear:both;
 <label><input type="checkbox" id="checkTus" checked> Tus recetas</label>
 <label><input type="checkbox" id="checkOnline"> Recetas online</label>
 </div>
+<div style="margin-top:15px;">
 <button class="btn" onclick="calcular()">Calcular</button>
+</div>
 <div id="pregunta" style="display:none;"></div>
 </div>
 </div>
@@ -272,10 +290,16 @@ clear:both;
 <div class="card">
 
 <!-- BOTÓN SCROLL -->
+<div class="barraAcciones">
+<div class="izq">
 <button class="btn" onclick="irOnline()">Ir a recetas online ↓</button>
+</div>
+
+<div class="der">
 <button class="btn" onclick="pdfSeleccionadas()">Descargar seleccionadas</button>
 <button class="btn-rojo" onclick="borrarRecetasMarcadas()">Eliminar seleccionadas</button>
-<br><br>
+</div>
+</div>
 
 <!-- 🔹 TUS RECETAS -->
 <h2>Tus recetas</h2>
@@ -328,8 +352,15 @@ clear:both;
 <input id="hcIng" placeholder="Gramos corresponden a 10g de HC">
 </div>
 
+<div class="barraAcciones">
+<div class="izq">
 <button class="btn" onclick="addIng()">Añadir</button>
+</div>
+
+<div class="der">
 <button class="btn-rojo" onclick="borrarIngMarcados()">Eliminar seleccionados</button>
+</div>
+</div>
 
 <table>
 <thead>

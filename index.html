@@ -179,6 +179,10 @@ cursor:pointer;
 <input id="nombre" placeholder="Nombre receta">
 <textarea id="texto"></textarea>
 <input id="personas" type="number" placeholder="Raciones">
+ <div class="fila">
+<label><input type="checkbox" id="checkTus" checked> Tus recetas</label>
+<label><input type="checkbox" id="checkOnline"> Recetas online</label>
+</div>
 <button class="btn" onclick="calcular()">Calcular</button>
 <div id="pregunta" style="display:none;"></div>
 </div>
@@ -186,8 +190,16 @@ cursor:pointer;
 
 <!-- RECETAS -->
 <div id="recetas" class="pantalla">
+
 <div class="card">
-<input id="buscarRec" placeholder="Buscar receta..." oninput="mostrarRecetas()">
+
+<!-- BOTÓN SCROLL -->
+<button class="btn" onclick="irOnline()">Ir a recetas online ↓</button>
+
+<!-- 🔹 TUS RECETAS -->
+<h2>Tus recetas</h2>
+<input placeholder="Buscar..." oninput="mostrarRecetas()">
+
 <table>
 <thead>
 <tr>
@@ -198,8 +210,28 @@ cursor:pointer;
 <th>❌</th>
 </tr>
 </thead>
-<tbody id="tablaRecetas"></tbody>
+<tbody id="tablaTus"></tbody>
 </table>
+
+<br><br>
+
+<!-- 🔹 ONLINE -->
+<h2 id="online">Recetas online</h2>
+<input placeholder="Buscar..." oninput="mostrarRecetas()">
+
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>Total HC</th>
+<th>Por ración</th>
+<th>PDF</th>
+<th>❌</th>
+</tr>
+</thead>
+<tbody id="tablaOnline"></tbody>
+</table>
+
 </div>
 </div>
 
@@ -318,13 +350,22 @@ datosTemp.lista.forEach(i=>{
 
 let porPersona=total/datosTemp.personas;
 
-recetas.push({
+let esTus = document.getElementById("checkTus").checked;
+let esOnline = document.getElementById("checkOnline").checked;
+
+let recetaObj = {
  nombre:datosTemp.nombre,
  total,
  pp:porPersona,
  lista:datosTemp.lista,
- personas:datosTemp.personas
-});
+ personas:datosTemp.personas,
+ tipo: []
+};
+
+if(esTus) recetaObj.tipo.push("tus");
+if(esOnline) recetaObj.tipo.push("online");
+
+recetas.push(recetaObj);
 
 guardarReceta({
  nombre:datosTemp.nombre,
@@ -355,19 +396,38 @@ async function guardarIngrediente(nombre, valor) {
 }
 
 function mostrarRecetas(){
-let t=document.getElementById('tablaRecetas');
-t.innerHTML='';
+
+let tus = document.getElementById('tablaTus');
+let online = document.getElementById('tablaOnline');
+
+tus.innerHTML='';
+online.innerHTML='';
 
 recetas.forEach((r,i)=>{
-t.innerHTML+=`
+
+let fila = `
 <tr>
 <td>${r.nombre}</td>
 <td>${r.total.toFixed(2)}</td>
 <td>${r.pp.toFixed(2)}</td>
 <td><button class="btn" onclick="pdf(${i})">PDF</button></td>
 <td><button class="btn-rojo" onclick="delRec(${i})">❌</button></td>
-</tr>`;
+</tr>
+`;
+
+if(r.tipo?.includes("tus")){
+tus.innerHTML += fila;
+}
+
+if(r.tipo?.includes("online")){
+online.innerHTML += fila;
+}
+
 });
+}
+ 
+function irOnline(){
+document.getElementById("online").scrollIntoView({behavior:"smooth"});
 }
 function pdf(i){
 

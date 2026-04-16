@@ -48,13 +48,13 @@ background:#ddd;
 }
 
 /* PANTALLAS */
-.pantalla{display:none;p:20px}
+.pantalla{display:none;padding:20px}
 .activa{display:block}
 
 /* CARD */
 .card{
 background:white;
-p:20px;
+padding:20px;
 border-radius:15px;
 max-width:900px;
 margin:auto;
@@ -87,7 +87,7 @@ flex:1;
 background:#4caf50;
 color:white;
 border:none;
-p:8px 12px;
+padding:8px 12px;
 border-radius:8px;
 cursor:pointer;
 font-weight:bold;
@@ -99,7 +99,7 @@ font-weight:bold;
 background:#e74c3c;
 color:white;
 border:none;
-p:8px;
+padding:8px;
 border-radius:8px;
 cursor:pointer;
 }
@@ -156,7 +156,69 @@ margin:0;
 transform:scale(1.2);
 cursor:pointer;
 }
+/* CHECKBOXES BONITOS */
+input[type="checkbox"]{
+width:18px;
+height:18px;
+margin:0;
+cursor:pointer;
+accent-color:#4caf50;
+transform:scale(1.05);
+vertical-align:middle;
+}
 
+/* LABELS DE AÑADIR RECETAS */
+.fila label{
+display:flex;
+align-items:center;
+gap:8px;
+background:#f7f7f7;
+padding:10px 14px;
+border-radius:10px;
+border:1px solid #ddd;
+font-weight:bold;
+cursor:pointer;
+justify-content:center;
+flex:1;
+}
+
+/* BOTONES MAS BONITOS */
+.btn,
+.btn-rojo{
+padding:10px 16px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+font-size:14px;
+transition:0.2s;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+margin:3px;
+}
+
+.btn:hover{
+transform:translateY(-1px);
+}
+
+.btn-rojo:hover{
+transform:translateY(-1px);
+}
+
+/* BOTONES DE ACCIONES EN VER RECETAS / INGREDIENTES */
+.card > .btn,
+.card > .btn-rojo{
+min-width:190px;
+}
+
+/* TABLAS MAS LIMPIAS */
+th{
+background:#f8f8f8;
+font-size:14px;
+}
+
+td{
+font-size:14px;
+}
 </style>
 </head>
 
@@ -453,7 +515,7 @@ let contenido = `
 <html>
 <body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
 
-<div style="border:1px solid black;p:9px;margin-bottom:40px;font-size:14px;">
+<div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
 ${r.nombre}
 </div>
 

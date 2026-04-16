@@ -777,7 +777,62 @@ alert("Selecciona alguna receta");
 return;
 }
 
+let w = window.open("", "_blank");
+
 let i = 0;
+
+function siguiente(){
+
+if(i >= checks.length){
+w.close();
+return;
+}
+
+let index = Number(checks[i].value);
+let r = recetas[index];
+
+let contenido = `
+<html>
+<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
+
+<h2>${r.nombre}</h2>
+
+<table border="1" style="width:100%;border-collapse:collapse;">
+<tr>
+<th>Ingrediente</th>
+<th>Cantidad</th>
+<th>HC</th>
+</tr>
+
+${r.lista.map(x=>`
+<tr>
+<td>${x.nom}</td>
+<td>${x.cant}</td>
+<td>${x.hc ? x.hc.toFixed(2) : ""}</td>
+</tr>
+`).join("")}
+
+</table>
+
+</body>
+</html>
+`;
+
+w.document.open();
+w.document.write(contenido);
+w.document.close();
+
+w.focus();
+w.print();
+
+i++;
+
+setTimeout(siguiente, 2500);
+}
+
+siguiente();
+
+}
 
 function siguiente(){
 

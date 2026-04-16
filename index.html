@@ -777,16 +777,22 @@ alert("Selecciona alguna receta");
 return;
 }
 
-/* abrir una sola ventana */
-let w = window.open("", "_blank");
-
 let i = 0;
 
 function siguiente(){
 
-if(i >= checks.length){
-w.close();
-return;
+if(i >= checks.length) return;
+
+pdf(Number(checks[i].value));
+
+i++;
+
+setTimeout(siguiente, 2000);
+
+}
+
+setTimeout(siguiente, 100);
+
 }
 
 let r = recetas[Number(checks[i].value)];

@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Hidratos Carbono</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 *{box-sizing:border-box}
@@ -14,6 +13,7 @@ margin:0;
 background:#f0f2f5;
 }
 
+/* HEADER */
 header{
 background:#1e1e2f;
 color:white;
@@ -23,6 +23,7 @@ font-size:22px;
 font-weight:bold;
 }
 
+/* NAV */
 nav{
 display:flex;
 justify-content:center;
@@ -39,11 +40,18 @@ border-radius:8px;
 background:white;
 cursor:pointer;
 font-weight:bold;
+transition:0.2s;
 }
 
+nav button:hover{
+background:#ddd;
+}
+
+/* PANTALLAS */
 .pantalla{display:none;padding:20px}
 .activa{display:block}
 
+/* CARD */
 .card{
 background:white;
 padding:20px;
@@ -53,7 +61,8 @@ margin:auto;
 box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
-input,textarea{
+/* INPUTS */
+input, textarea{
 width:100%;
 padding:10px;
 margin:5px 0;
@@ -63,34 +72,41 @@ border:1px solid #ccc;
 
 textarea{height:120px}
 
+/* FILA */
 .fila{
 display:flex;
 gap:10px;
-flex-wrap:wrap;
 }
 
-.fila input{flex:1}
+.fila input{
+flex:1;
+}
 
+/* BOTONES */
 .btn{
 background:#4caf50;
 color:white;
 border:none;
-padding:10px 14px;
+padding:8px 12px;
 border-radius:8px;
 cursor:pointer;
 font-weight:bold;
 }
+
+.btn:hover{background:#45a049}
 
 .btn-rojo{
 background:#e74c3c;
 color:white;
 border:none;
-padding:10px 14px;
+padding:8px;
 border-radius:8px;
 cursor:pointer;
-font-weight:bold;
 }
 
+.btn-rojo:hover{background:#c0392b}
+
+/* TABLAS */
 table{
 width:100%;
 border-collapse:collapse;
@@ -101,15 +117,132 @@ td,th{
 padding:10px;
 border-bottom:1px solid #ddd;
 text-align:center;
+position:relative;
+}
+
+/* EDITAR */
+.edit{
+position:relative;
+width:100%;
+text-align:center;
+}
+
+.edit span{
+display:block;
+width:100%;
+text-align:center;
+}
+
+.edit input{
+width:100%;
+box-sizing:border-box;
+text-align:center;
+padding-right:25px;
+}
+
+.lapiz{
+position:absolute;
+right:5px;
+top:50%;
+transform:translateY(-50%);
+background:none;
+border:none;
+cursor:pointer;
 }
 
 input[type="checkbox"]{
+width:auto;
+margin:0;
+transform:scale(1.2);
+cursor:pointer;
+}
+/* CHECKBOXES BONITOS */
+input[type="checkbox"]{
 width:18px;
 height:18px;
+margin:0;
+cursor:pointer;
 accent-color:#4caf50;
+transform:scale(1.05);
+vertical-align:middle;
 }
 
-.oculto{display:none}
+/* LABELS DE AÑADIR RECETAS */
+.fila label{
+display:flex;
+align-items:center;
+gap:8px;
+background:#f7f7f7;
+padding:10px 14px;
+border-radius:10px;
+border:1px solid #ddd;
+font-weight:bold;
+cursor:pointer;
+justify-content:center;
+flex:1;
+}
+
+/* BOTONES MAS BONITOS */
+.btn,
+.btn-rojo{
+padding:8px 12px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+font-size:13px;
+transition:0.2s;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+margin:3px;
+}
+
+.btn:hover{
+transform:translateY(-1px);
+}
+
+.btn-rojo:hover{
+transform:translateY(-1px);
+}
+
+/* BOTONES DE ACCIONES EN VER RECETAS / INGREDIENTES */
+.card > .btn,
+.card > .btn-rojo{
+min-width:190px;
+float:right;
+margin-left:8px;
+margin-bottom:8px;
+}
+
+/* TABLAS MAS LIMPIAS */
+th{
+background:#f8f8f8;
+font-size:14px;
+}
+
+td{
+font-size:14px;
+}
+ 
+h2{
+clear:both;
+}
+
+.barraAcciones{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+margin:12px 0 18px 0;
+flex-wrap:wrap;
+}
+
+.izq,.der{
+display:flex;
+gap:8px;
+align-items:center;
+flex-wrap:wrap;
+}
+ 
 </style>
 </head>
 
@@ -117,73 +250,99 @@ accent-color:#4caf50;
 
 <header>🍽️ Gestor de Hidratos de Carbono</header>
 
-<!-- LOGIN -->
-<div id="login" class="pantalla activa">
-<div class="card">
-<h2>Iniciar sesión</h2>
+<div style="background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
-<input id="mail" placeholder="Correo electrónico">
-<input id="pass" type="password" placeholder="Contraseña">
+<input id="mail" placeholder="Correo"
+style="width:220px;padding:8px;margin:5px;">
 
-<div class="fila">
-<button class="btn" onclick="entrar()">Entrar</button>
+<input id="pass" type="password" placeholder="Contraseña"
+style="width:220px;padding:8px;margin:5px;">
+
 <button class="btn" onclick="registrar()">Registrarse</button>
-</div>
+<button class="btn" onclick="entrar()">Entrar</button>
+<button class="btn-rojo" onclick="salir()">Salir</button>
 
 </div>
-</div>
-
-<!-- APP -->
-<div id="app" class="oculto">
 
 <nav>
 <button onclick="ir('inicio')">INICIO</button>
 <button onclick="ir('crear')">AÑADIR RECETAS</button>
 <button onclick="ir('recetas')">VER RECETAS</button>
-<button onclick="salir()">SALIR</button>
+<button onclick="ir('ingredientes')">VER INGREDIENTES</button>
 </nav>
 
 <!-- INICIO -->
-<div id="inicio" class="pantalla">
+<div id="inicio" class="pantalla activa">
 <div class="card">
-Bienvenido.
+<p>Esta herramienta está diseñada para calcular los hidratos de carbono de recetas de forma rápida y sencilla.</p>
+<p>Introduce los ingredientes junto con sus cantidades y obtendrás automáticamente el total de hidratos de carbono.</p>
+<p>Si utilizas un alimento que no está registrado, podrás añadirlo fácilmente para usarlo en futuras recetas.</p>
+<p>Además, puedes guardar tus recetas y exportarlas en formato PDF.</p>
 </div>
 </div>
 
 <!-- CREAR -->
 <div id="crear" class="pantalla">
 <div class="card">
-
+<div class="fila" style="align-items:center;">
 <input id="nombre" placeholder="Nombre receta">
-<textarea id="texto" placeholder="Ejemplo:
-arroz 100
-leche 200"></textarea>
 
+<button type="button" class="btn" onclick="toggleAyuda()" style="width:45px;min-width:45px;padding:10px;">
+❓
+</button>
+</div>
+
+<div id="ayudaReceta" style="display:none;background:#f8f8f8;border:1px solid #ddd;padding:12px;border-radius:10px;margin-top:8px;font-size:14px;line-height:1.5;">
+Para utilizar esta función correctamente, primero introduce el ingrediente y después la cantidad correspondiente en g, ml u otra unidad indicada.<br><br>
+
+En lugar de hacer clic en Calcular y Guardar, también puedes utilizar la tecla Enter.<br><br>
+Para la función Saltar, puedes usar la tecla Shift (Mayúsculas).<br><br>
+
+Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas, Recetas online o en ambas opciones.
+</div>
+<textarea id="texto"></textarea>
 <input id="personas" type="number" placeholder="Raciones">
-
-<div class="fila">
+ <div class="fila">
 <label><input type="checkbox" id="checkTus" checked> Tus recetas</label>
 <label><input type="checkbox" id="checkOnline"> Recetas online</label>
 </div>
-
-<br>
-<button class="btn" onclick="guardarRecetaNueva()">Guardar receta</button>
-
+<div style="margin-top:15px;">
+<button class="btn" onclick="calcular()">Calcular</button>
+</div>
+<div id="pregunta" style="display:none;"></div>
 </div>
 </div>
 
 <!-- RECETAS -->
 <div id="recetas" class="pantalla">
+
 <div class="card">
 
+<!-- BOTÓN SCROLL -->
+<div class="barraAcciones">
+<div class="izq">
+<button class="btn" onclick="irOnline()">Ir a recetas online ↓</button>
+</div>
+
+<div class="der">
+<button class="btn" onclick="pdfSeleccionadas()">Descargar seleccionadas</button>
+<button class="btn-rojo" onclick="borrarRecetasMarcadas()">Eliminar seleccionadas</button>
+</div>
+</div>
+
+<!-- 🔹 TUS RECETAS -->
 <h2>Tus recetas</h2>
+<input placeholder="Buscar..." oninput="mostrarRecetas()">
+
 <table>
 <thead>
 <tr>
 <th>Nombre</th>
 <th>Total HC</th>
 <th>Por ración</th>
+<th>PDF</th>
 <th>❌</th>
+<th>✅</th>
 </tr>
 </thead>
 <tbody id="tablaTus"></tbody>
@@ -191,13 +350,19 @@ leche 200"></textarea>
 
 <br><br>
 
-<h2>Recetas online</h2>
+<!-- 🔹 ONLINE -->
+<h2 id="online">Recetas online</h2>
+<input placeholder="Buscar..." oninput="mostrarRecetas()">
+
 <table>
 <thead>
 <tr>
 <th>Nombre</th>
 <th>Total HC</th>
 <th>Por ración</th>
+<th>PDF</th>
+<th>❌</th>
+<th>✅</th>
 </tr>
 </thead>
 <tbody id="tablaOnline"></tbody>
@@ -206,181 +371,572 @@ leche 200"></textarea>
 </div>
 </div>
 
+<!-- INGREDIENTES -->
+<div id="ingredientes" class="pantalla">
+<div class="card">
+<input id="buscarIng" placeholder="Buscar ingrediente..." oninput="mostrarIng()">
+
+<div class="fila">
+<input id="nomIng" placeholder="Nombre ingrediente">
+<input id="hcIng" placeholder="Gramos corresponden a 10g de HC">
 </div>
 
+<div class="barraAcciones">
+<div class="izq">
+<button class="btn" onclick="addIng()">Añadir</button>
+</div>
+
+<div class="der">
+<button class="btn-rojo" onclick="borrarIngMarcados()">Eliminar seleccionados</button>
+</div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Ingrediente</th>
+<th>Gramos corresponden a 10g de HC</th>
+<th>❌</th>
+<th>✅</th>
+</tr>
+</thead>
+<tbody id="tablaIng"></tbody>
+</table>
+</div>
+</div>
+
+<script>
+
+let ingredientes = {};
+let recetas = [];
+
+let pendientes = [];
+let datosTemp = null;
+
+function guardar(){
+}
+
+function toggleAyuda(){
+
+let caja = document.getElementById("ayudaReceta");
+
+if(
+caja.style.display === "none" ||
+caja.style.display === ""
+){
+caja.style.display = "block";
+}else{
+caja.style.display = "none";
+}
+
+}
+
+function ir(p){
+ document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));
+ document.getElementById(p).classList.add('activa');
+ mostrarRecetas();
+ mostrarIng();
+}
+
+function limpiar(l){
+ return l.toLowerCase().replace('g','').replace('ml','').trim();
+}
+
+function calcular(){
+let nombre=document.getElementById('nombre').value.trim();
+let personas=parseFloat(document.getElementById('personas').value);
+let lineas=document.getElementById('texto').value.split('\n');
+
+if(!nombre||!personas){alert("Faltan datos");return;}
+
+pendientes=[];
+let lista=[];
+
+lineas.forEach(l=>{
+ l=limpiar(l);
+ if(!l) return;
+
+ let partes = l.split(" ");
+ let cant = parseFloat(partes.pop());
+ let nom = partes.join(" ");
+
+ if(!nom||isNaN(cant)) return;
+
+ lista.push({nom,cant});
+ if(!ingredientes[nom]) pendientes.push(nom);
+});
+
+datosTemp={lista,nombre,personas};
+
+if(pendientes.length>0){preguntar();} else{calcularFinal();}
+}
+
+function preguntar(){
+if(pendientes.length===0){calcularFinal();return;}
+
+let ing=pendientes.shift();
+
+document.getElementById('pregunta').style.display='block';
+document.getElementById('pregunta').innerHTML=`
+<p>¿Cuántos gramos corresponden a 10g de HC para "${ing}"?</p>
+<input id="nuevo" onkeydown="if(event.key==='Enter') guardarIng('${ing}')">
+<button onclick="guardarIng('${ing}')">Guardar</button>
+<button onclick="preguntar()">Saltar</button>
+`;
+}
+
+function guardarIng(ing){
+let v=parseFloat(document.getElementById('nuevo').value);
+if(isNaN(v)){alert("Valor incorrecto");return;}
+ingredientes[ing]=v;
+guardar();
+guardarIngrediente(ing, v);
+preguntar();
+}
+
+function calcularFinal(){
+
+document.getElementById('pregunta').style.display='none';
+
+let total=0;
+
+datosTemp.lista.forEach(i=>{
+ if(ingredientes[i.nom]){
+  i.hc=(i.cant/ingredientes[i.nom])*10;
+  total+=i.hc;
+ }
+});
+
+let porPersona=total/datosTemp.personas;
+
+let esTus = document.getElementById("checkTus").checked;
+let esOnline = document.getElementById("checkOnline").checked;
+
+let recetaObj = {
+ nombre:datosTemp.nombre,
+ total,
+ pp:porPersona,
+ lista:datosTemp.lista,
+ personas:datosTemp.personas,
+ tipo: []
+};
+
+if(esTus) recetaObj.tipo.push("tus");
+if(esOnline) recetaObj.tipo.push("online");
+
+recetas.push(recetaObj);
+
+guardarReceta({
+ nombre:datosTemp.nombre,
+ total,
+ pp:porPersona,
+ lista:datosTemp.lista,
+ personas:datosTemp.personas
+});
+
+guardar();
+
+document.getElementById('nombre').value='';
+document.getElementById('texto').value='';
+document.getElementById('personas').value='';
+
+ir('recetas');
+}
+
+async function guardarReceta(receta) {
+  await addDoc(collection(db, "recetas"), receta);
+}
+
+async function guardarIngrediente(nombre, valor) {
+  await addDoc(collection(db, "ingredientes"), {
+    nombre: nombre,
+    valor: valor
+  });
+}
+
+function mostrarRecetas(){
+
+let tus = document.getElementById('tablaTus');
+let online = document.getElementById('tablaOnline');
+
+tus.innerHTML='';
+online.innerHTML='';
+
+/* ordenar recetas */
+let ordenadas = [...recetas].sort((a,b)=>
+a.nombre.localeCompare(b.nombre, 'es', {numeric:true, sensitivity:'base'})
+);
+
+ordenadas.forEach(r=>{
+
+let i = recetas.indexOf(r);
+
+let fila = `
+<tr>
+<td>${r.nombre}</td>
+<td>${r.total.toFixed(2)}</td>
+<td>${r.pp.toFixed(2)}</td>
+<td><button class="btn" onclick="pdf(${i})">PDF</button></td>
+<td><button class="btn-rojo" onclick="delRec(${i})">❌</button></td>
+<td><input type="checkbox" class="checkReceta" value="${i}"></td>
+</tr>
+`;
+
+if(r.tipo && r.tipo.includes("tus")){
+tus.innerHTML += fila;
+}
+
+if(r.tipo && r.tipo.includes("online")){
+online.innerHTML += fila;
+}
+
+});
+
+}
+ 
+function irOnline(){
+document.getElementById("online").scrollIntoView({behavior:"smooth"});
+}
+function pdf(i){
+
+let r = recetas[i];
+
+let contenido = `
+<html>
+<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
+
+<div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
+${r.nombre}
+</div>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<tr>
+<td style="border:1px solid black;text-align:center;">Ingredientes</td>
+<td style="border:1px solid black;text-align:center;">Cantidad</td>
+<td style="border:1px solid black;text-align:center;">Hidratos Carbono</td>
+</tr>
+
+${r.lista.map(x=>`
+<tr>
+<td style="border:1px solid black;text-align:center;">${x.nom.charAt(0).toUpperCase()+x.nom.slice(1)}</td>
+<td style="border:1px solid black;text-align:center;">${x.cant}</td>
+<td style="border:1px solid black;text-align:center;">${x.hc ? x.hc.toFixed(2) : ""}</td>
+</tr>
+`).join("")}
+
+</table>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Raciones</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.personas}</td>
+</tr>
+</table>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;">
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.total.toFixed(2)}</td>
+</tr>
+<tr>
+<td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono por Ración</td>
+<td style="border:1px solid black;width:30%;text-align:center;">${r.pp.toFixed(2)}</td>
+</tr>
+</table>
+
+</body>
+</html>
+`;
+
+let w = window.open("", "_blank");
+w.document.write(contenido);
+w.document.close();
+w.print();
+}
+function mostrarIng(){
+
+let t = document.getElementById('tablaIng');
+t.innerHTML='';
+
+/* ordenar ingredientes */
+let lista = Object.keys(ingredientes).sort((a,b)=>
+a.localeCompare(b, 'es', {numeric:true, sensitivity:'base'})
+);
+
+lista.forEach(i=>{
+
+t.innerHTML += `
+<tr>
+<td>${i}</td>
+<td>${ingredientes[i]}</td>
+<td><button class="btn-rojo" onclick="delIng('${i}')">❌</button></td>
+<td><input type="checkbox" class="checkIng" value="${i}"></td>
+</tr>
+`;
+
+});
+
+}
+async function delRec(i){
+  let nombre = recetas[i].nombre;
+
+  console.log("Borrando receta:", nombre);
+
+  // borrar en pantalla
+  recetas.splice(i,1);
+  mostrarRecetas();
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "recetas"));
+
+    for (const docu of querySnapshot.docs) {
+      let data = docu.data();
+
+      if (data.nombre === nombre) {
+        await deleteDoc(docu.ref);
+      }
+    }
+
+  } catch(e){
+    console.error("Error:", e);
+  }
+}
+
+async function delIng(i){
+  console.log("Borrando:", i);
+
+  // borrar en pantalla
+  delete ingredientes[i];
+  mostrarIng();
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "ingredientes"));
+
+    for (const docu of querySnapshot.docs) {
+      let data = docu.data();
+
+      if (data.nombre === i) {
+        await deleteDoc(docu.ref);
+      }
+    }
+
+  } catch(e){
+    console.error("Error:", e);
+  }
+}
+
+function addIng(){
+let n=document.getElementById('nomIng').value.trim();
+let v=parseFloat(document.getElementById('hcIng').value);
+
+if(!n||isNaN(v)) return;
+
+ingredientes[n]=v;
+guardar();
+guardarIngrediente(n, v);
+mostrarIng();
+
+/* LIMPIAR INPUTS */
+document.getElementById('nomIng').value = '';
+document.getElementById('hcIng').value = '';
+}
+
+async function cargarRecetas() {
+  const querySnapshot = await getDocs(collection(db, "recetas"));
+
+  querySnapshot.forEach((doc) => {
+    let data = doc.data();
+
+    if(!data.tipo){
+      data.tipo = ["tus"];
+    }
+
+    if(!recetas.some(r => r.nombre === data.nombre)){
+      recetas.push(data);
+    }
+  });
+
+  mostrarRecetas();
+}
+
+async function cargarIngredientes() {
+  console.log("🔥 Cargando ingredientes desde Firebase");
+
+  const querySnapshot = await getDocs(collection(db, "ingredientes"));
+
+  querySnapshot.forEach((doc) => {
+    let data = doc.data();
+    console.log("Ingrediente:", data);
+    ingredientes[data.nombre] = data.valor;
+  });
+
+  mostrarIng();
+}
+
+document.addEventListener("keydown", function(e){
+
+// ENTER
+if(e.key === "Enter"){
+
+let activa = document.querySelector(".pantalla.activa")?.id;
+
+// NO interferir con textarea
+if(document.activeElement.tagName === "TEXTAREA") return;
+
+// INGREDIENTES
+if(activa === "ingredientes"){
+addIng();
+return;
+}
+
+// CREAR RECETA
+if(activa === "crear"){
+calcular();
+return;
+}
+
+// PREGUNTA (guardar ingrediente)
+if(document.getElementById("nuevo")){
+document.querySelector("#pregunta button").click();
+return;
+}
+
+}
+
+// SHIFT = SALTAR
+if(e.key === "Shift"){
+if(document.getElementById("pregunta").style.display !== "none"){
+preguntar();
+}
+}
+
+});
+function pdfSeleccionadas(){
+
+let checks = [...document.querySelectorAll(".checkReceta:checked")];
+
+if(checks.length === 0){
+alert("Selecciona alguna receta");
+return;
+}
+
+let i = 0;
+
+function siguiente(){
+
+if(i >= checks.length) return;
+
+pdf(Number(checks[i].value));
+
+i++;
+
+setTimeout(siguiente, 2000);
+
+}
+
+siguiente();
+
+}
+async function borrarRecetasMarcadas(){
+
+let checks = [...document.querySelectorAll(".checkReceta:checked")];
+
+let indices = checks.map(c => parseInt(c.value));
+
+indices.sort((a,b)=>b-a);
+
+for(let i of indices){
+ await delRec(i);
+}
+
+}
+
+function borrarIngMarcados(){
+let checks = [...document.querySelectorAll(".checkIng:checked")];
+
+checks.forEach(c=>{
+delIng(c.value);
+});
+}
+async function registrar(){
+
+await createUserWithEmailAndPassword(
+auth,
+document.getElementById("mail").value,
+document.getElementById("pass").value
+);
+
+alert("Cuenta creada");
+
+}
+
+async function entrar(){
+
+await signInWithEmailAndPassword(
+auth,
+document.getElementById("mail").value,
+document.getElementById("pass").value
+);
+
+alert("Sesión iniciada");
+
+}
+
+async function salir(){
+
+await signOut(auth);
+
+alert("Sesión cerrada");
+
+}
+</script>
+
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-
 import {
 getFirestore,
-collection,
 addDoc,
+collection,
 getDocs,
-deleteDoc,
-doc
+deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import {
 getAuth,
 createUserWithEmailAndPassword,
 signInWithEmailAndPassword,
-onAuthStateChanged,
-signOut
+signOut,
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
 const firebaseConfig = {
-apiKey: "AIzaSyBozzwT9hTW8TP1NCUWkKDJIN1JxQox_vY",
-authDomain: "mi-web-hidratos.firebaseapp.com",
-projectId: "mi-web-hidratos",
-storageBucket: "mi-web-hidratos.firebasestorage.app",
-messagingSenderId: "75949902551",
-appId: "1:75949902551:web:c88713d1747ed1ea153e92"
+ 
+  apiKey: "AIzaSyBozzwT9hTW8TP1NCUWkKDJIN1JxQox_vY",
+  authDomain: "mi-web-hidratos.firebaseapp.com",
+  projectId: "mi-web-hidratos",
+  storageBucket: "mi-web-hidratos.firebasestorage.app",
+  messagingSenderId: "75949902551",
+  appId: "1:75949902551:web:c88713d1747ed1ea153e92"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-let recetas = [];
+window.auth = auth;
 
-window.ir = function(p){
-document.querySelectorAll(".pantalla").forEach(x=>x.classList.remove("activa"));
-document.getElementById(p).classList.add("activa");
+window.db = db;
+window.addDoc = addDoc;
+window.collection = collection;
+window.getDocs = getDocs;
+window.deleteDoc = deleteDoc;
 
-if(p==="recetas") cargarRecetas();
-}
-
-window.registrar = async function(){
-let email=document.getElementById("mail").value;
-let pass=document.getElementById("pass").value;
-
-try{
-await createUserWithEmailAndPassword(auth,email,pass);
-}catch(e){
-alert(e.message);
-}
-}
-
-window.entrar = async function(){
-let email=document.getElementById("mail").value;
-let pass=document.getElementById("pass").value;
-
-try{
-await signInWithEmailAndPassword(auth,email,pass);
-}catch(e){
-alert(e.message);
-}
-}
-
-window.salir = async function(){
-await signOut(auth);
-}
-
-onAuthStateChanged(auth,(user)=>{
-
-if(user){
-document.getElementById("login").classList.remove("activa");
-document.getElementById("login").style.display="none";
-
-document.getElementById("app").classList.remove("oculto");
-
-ir("inicio");
-
-}else{
-document.getElementById("app").classList.add("oculto");
-document.getElementById("login").style.display="block";
-document.getElementById("login").classList.add("activa");
-}
-});
-
-window.guardarRecetaNueva = async function(){
-
-let user = auth.currentUser;
-if(!user) return;
-
-let nombre=document.getElementById("nombre").value.trim();
-let personas=parseFloat(document.getElementById("personas").value);
-
-if(!nombre || !personas){
-alert("Faltan datos");
-return;
-}
-
-let total=0;
-let pp=0;
-
-let esTus=document.getElementById("checkTus").checked;
-let esOnline=document.getElementById("checkOnline").checked;
-
-let tipo=[];
-
-if(esTus) tipo.push("tus");
-if(esOnline) tipo.push("online");
-
-await addDoc(collection(db,"recetas"),{
-nombre,
-personas,
-total,
-pp,
-tipo,
-uid:user.uid
-});
-
-alert("Guardada");
-
-document.getElementById("nombre").value="";
-document.getElementById("texto").value="";
-document.getElementById("personas").value="";
-}
-
-async function cargarRecetas(){
-
-let user=auth.currentUser;
-if(!user) return;
-
-let querySnapshot = await getDocs(collection(db,"recetas"));
-
-let tus="";
-let online="";
-
-querySnapshot.forEach((docu)=>{
-
-let r=docu.data();
-
-if(r.tipo?.includes("tus") && r.uid===user.uid){
-tus += `
-<tr>
-<td>${r.nombre}</td>
-<td>${r.total}</td>
-<td>${r.pp}</td>
-<td><button class="btn-rojo" onclick="borrarReceta('${docu.id}')">❌</button></td>
-</tr>
-`;
-}
-
-if(r.tipo?.includes("online")){
-online += `
-<tr>
-<td>${r.nombre}</td>
-<td>${r.total}</td>
-<td>${r.pp}</td>
-</tr>
-`;
-}
-
-});
-
-document.getElementById("tablaTus").innerHTML=tus;
-document.getElementById("tablaOnline").innerHTML=online;
-}
-
-window.borrarReceta = async function(id){
-await deleteDoc(doc(db,"recetas",id));
-cargarRecetas();
-}
+setTimeout(() => {
+  cargarRecetas();
+  cargarIngredientes();
+}, 500);
 
 </script>
+
 </body>
 </html>
 

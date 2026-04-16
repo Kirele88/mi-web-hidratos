@@ -769,13 +769,29 @@ preguntar();
 
 });
 function pdfSeleccionadas(){
-let checks = document.querySelectorAll(".checkReceta:checked");
 
-checks.forEach((c, i)=>{
-setTimeout(()=>{
-pdf(Number(c.value));
-}, i * 500);
-});
+let checks = [...document.querySelectorAll(".checkReceta:checked")];
+
+if(checks.length === 0){
+alert("Selecciona alguna receta");
+return;
+}
+
+let i = 0;
+
+function siguiente(){
+
+if(i >= checks.length) return;
+
+pdf(Number(checks[i].value));
+
+i++;
+
+setTimeout(siguiente, 1500); // tiempo entre PDFs
+}
+
+siguiente();
+
 }
 
 async function borrarRecetasMarcadas(){

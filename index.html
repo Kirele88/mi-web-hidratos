@@ -519,7 +519,14 @@ let online = document.getElementById('tablaOnline');
 tus.innerHTML='';
 online.innerHTML='';
 
-recetas.forEach((r,i)=>{
+/* ordenar recetas */
+let ordenadas = [...recetas].sort((a,b)=>
+a.nombre.localeCompare(b.nombre, 'es', {numeric:true, sensitivity:'base'})
+);
+
+ordenadas.forEach(r=>{
+
+let i = recetas.indexOf(r);
 
 let fila = `
 <tr>
@@ -531,7 +538,7 @@ let fila = `
 <td><input type="checkbox" class="checkReceta" value="${i}"></td>
 </tr>
 `;
- 
+
 if(r.tipo && r.tipo.includes("tus")){
 tus.innerHTML += fila;
 }
@@ -541,6 +548,7 @@ online.innerHTML += fila;
 }
 
 });
+
 }
  
 function irOnline(){
@@ -603,20 +611,29 @@ w.document.close();
 w.print();
 }
 function mostrarIng(){
-let t=document.getElementById('tablaIng');
+
+let t = document.getElementById('tablaIng');
 t.innerHTML='';
 
-Object.keys(ingredientes).forEach(i=>{
-t.innerHTML+=`
+/* ordenar ingredientes */
+let lista = Object.keys(ingredientes).sort((a,b)=>
+a.localeCompare(b, 'es', {numeric:true, sensitivity:'base'})
+);
+
+lista.forEach(i=>{
+
+t.innerHTML += `
 <tr>
 <td>${i}</td>
 <td>${ingredientes[i]}</td>
 <td><button class="btn-rojo" onclick="delIng('${i}')">❌</button></td>
 <td><input type="checkbox" class="checkIng" value="${i}"></td>
-</tr>`;
-});
-}
+</tr>
+`;
 
+});
+
+}
 async function delRec(i){
   let nombre = recetas[i].nombre;
 

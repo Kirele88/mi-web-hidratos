@@ -270,7 +270,23 @@ flex-wrap:wrap;
 <!-- CREAR -->
 <div id="crear" class="pantalla">
 <div class="card">
+<div class="fila" style="align-items:center;">
 <input id="nombre" placeholder="Nombre receta">
+
+<button type="button" class="btn" onclick="toggleAyuda()" style="width:45px;min-width:45px;padding:10px;">
+❓
+</button>
+</div>
+
+<div id="ayudaReceta" style="display:none;background:#f8f8f8;border:1px solid #ddd;padding:12px;border-radius:10px;margin-top:8px;font-size:14px;line-height:1.5;">
+Para que funcione tienes que escribir primero el ingrediente y después los g, ml...<br><br>
+
+En vez de hacer click en calcular y guardar puedes utilizar la tecla Enter.<br><br>
+
+Para el botón de saltar puedes utilizar la tecla Shift mayúscula.<br><br>
+
+Escoge en dónde quieres que se guarde la receta que estás calculando: en tus recetas, recetas online o en las dos.
+</div>
 <textarea id="texto"></textarea>
 <input id="personas" type="number" placeholder="Raciones">
  <div class="fila">
@@ -386,6 +402,15 @@ let datosTemp = null;
 
 /* ✅ ARREGLADO */
 function guardar(){
+ function toggleAyuda(){
+let caja = document.getElementById("ayudaReceta");
+
+if(caja.style.display === "none"){
+caja.style.display = "block";
+}else{
+caja.style.display = "none";
+}
+}
 }
 
 function ir(p){

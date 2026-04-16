@@ -858,10 +858,12 @@ checks.forEach(c=>{
 delIng(c.value);
 });
 }
-async function registrar(){
+window.registrar = async function () {
+
+console.log("clic registrar");
 
 await createUserWithEmailAndPassword(
-auth,
+window.auth,
 document.getElementById("mail").value,
 document.getElementById("pass").value
 );
@@ -870,10 +872,12 @@ alert("Cuenta creada");
 
 }
 
-async function entrar(){
+window.entrar = async function () {
+
+console.log("clic entrar");
 
 await signInWithEmailAndPassword(
-auth,
+window.auth,
 document.getElementById("mail").value,
 document.getElementById("pass").value
 );
@@ -882,9 +886,11 @@ alert("Sesión iniciada");
 
 }
 
-async function salir(){
+window.salir = async function () {
 
-await signOut(auth);
+console.log("clic salir");
+
+await signOut(window.auth);
 
 alert("Sesión cerrada");
 

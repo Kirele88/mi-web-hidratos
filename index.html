@@ -34,7 +34,7 @@ flex-wrap:wrap;
 }
 
 nav button{
-p:10px 15px;
+padding:10px 15px;
 border:none;
 border-radius:8px;
 background:white;
@@ -195,6 +195,9 @@ cursor:pointer;
 
 <!-- BOTÓN SCROLL -->
 <button class="btn" onclick="irOnline()">Ir a recetas online ↓</button>
+<button class="btn" onclick="pdfSeleccionadas()">Descargar seleccionadas</button>
+<button class="btn-rojo" onclick="borrarRecetasMarcadas()">Eliminar seleccionadas</button>
+<br><br>
 
 <!-- 🔹 TUS RECETAS -->
 <h2>Tus recetas</h2>
@@ -208,6 +211,7 @@ cursor:pointer;
 <th>Por ración</th>
 <th>PDF</th>
 <th>❌</th>
+<th>☑</th>
 </tr>
 </thead>
 <tbody id="tablaTus"></tbody>
@@ -227,6 +231,7 @@ cursor:pointer;
 <th>Por ración</th>
 <th>PDF</th>
 <th>❌</th>
+<th>☑</th>
 </tr>
 </thead>
 <tbody id="tablaOnline"></tbody>
@@ -246,6 +251,7 @@ cursor:pointer;
 </div>
 
 <button class="btn" onclick="addIng()">Añadir</button>
+<button class="btn-rojo" onclick="borrarIngMarcados()">Eliminar seleccionados</button>
 
 <table>
 <thead>
@@ -253,6 +259,7 @@ cursor:pointer;
 <th>Ingrediente</th>
 <th>Gramos corresponden a 10g de HC</th>
 <th>❌</th>
+<th>☑</th>
 </tr>
 </thead>
 <tbody id="tablaIng"></tbody>
@@ -412,9 +419,10 @@ let fila = `
 <td>${r.pp.toFixed(2)}</td>
 <td><button class="btn" onclick="pdf(${i})">PDF</button></td>
 <td><button class="btn-rojo" onclick="delRec(${i})">❌</button></td>
+<td><input type="checkbox" class="checkReceta" value="${i}"></td>
 </tr>
 `;
-
+ 
 if(r.tipo && r.tipo.includes("tus")){
 tus.innerHTML += fila;
 }
@@ -495,6 +503,7 @@ t.innerHTML+=`
 <td>${i}</td>
 <td>${ingredientes[i]}</td>
 <td><button class="btn-rojo" onclick="delIng('${i}')">❌</button></td>
+<td><input type="checkbox" class="checkIng" value="${i}"></td>
 </tr>`;
 });
 }
@@ -634,6 +643,31 @@ preguntar();
 }
 
 });
+ function pdfSeleccionadas(){
+let checks = document.querySelectorAll(".checkReceta:checked");
+
+checks.forEach(c=>{
+pdf(parseInt(c.value));
+});
+}
+
+function borrarRecetasMarcadas(){
+let checks = [...document.querySelectorAll(".checkReceta:checked")];
+
+checks.sort((a,b)=>b.value-a.value);
+
+checks.forEach(c=>{
+delRec(parseInt(c.value));
+});
+}
+
+function borrarIngMarcados(){
+let checks = document.querySelectorAll(".checkIng:checked");
+
+checks.forEach(c=>{
+delIng(c.value);
+});
+}
 </script>
 
 <script type="module">

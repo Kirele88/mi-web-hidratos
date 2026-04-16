@@ -149,6 +149,14 @@ background:none;
 border:none;
 cursor:pointer;
 }
+
+input[type="checkbox"]{
+width:auto;
+margin:0;
+transform:scale(1.2);
+cursor:pointer;
+}
+
 </style>
 </head>
 
@@ -643,26 +651,32 @@ preguntar();
 }
 
 });
- function pdfSeleccionadas(){
+function pdfSeleccionadas(){
 let checks = document.querySelectorAll(".checkReceta:checked");
 
-checks.forEach(c=>{
-pdf(parseInt(c.value));
+checks.forEach((c, i)=>{
+setTimeout(()=>{
+pdf(Number(c.value));
+}, i * 500);
 });
 }
 
-function borrarRecetasMarcadas(){
+async function borrarRecetasMarcadas(){
+
 let checks = [...document.querySelectorAll(".checkReceta:checked")];
 
-checks.sort((a,b)=>b.value-a.value);
+let indices = checks.map(c => parseInt(c.value));
 
-checks.forEach(c=>{
-delRec(parseInt(c.value));
-});
+indices.sort((a,b)=>b-a);
+
+for(let i of indices){
+ await delRec(i);
+}
+
 }
 
 function borrarIngMarcados(){
-let checks = document.querySelectorAll(".checkIng:checked");
+let checks = [...document.querySelectorAll(".checkIng:checked")];
 
 checks.forEach(c=>{
 delIng(c.value);

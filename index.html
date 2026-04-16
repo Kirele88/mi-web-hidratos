@@ -929,6 +929,9 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 window.auth = auth;
+window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+window.signOut = signOut;
 
 window.db = db;
 window.addDoc = addDoc;

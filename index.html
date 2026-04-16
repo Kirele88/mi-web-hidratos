@@ -777,7 +777,65 @@ alert("Selecciona alguna receta");
 return;
 }
 
+/* abrir una sola ventana */
+let w = window.open("", "_blank");
+
 let i = 0;
+
+function siguiente(){
+
+if(i >= checks.length){
+w.close();
+return;
+}
+
+let r = recetas[Number(checks[i].value)];
+
+let contenido = `
+<html>
+<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
+
+<div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
+${r.nombre}
+</div>
+
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<tr>
+<td style="border:1px solid black;">Ingredientes</td>
+<td style="border:1px solid black;">Cantidad</td>
+<td style="border:1px solid black;">HC</td>
+</tr>
+
+${r.lista.map(x=>`
+<tr>
+<td style="border:1px solid black;">${x.nom}</td>
+<td style="border:1px solid black;">${x.cant}</td>
+<td style="border:1px solid black;">${x.hc ? x.hc.toFixed(2) : ""}</td>
+</tr>
+`).join("")}
+
+</table>
+
+</body>
+</html>
+`;
+
+w.document.open();
+w.document.write(contenido);
+w.document.close();
+
+w.focus();
+w.print();
+
+i++;
+
+setTimeout(siguiente, 2500);
+
+}
+
+siguiente();
+
+}
 
 function siguiente(){
 

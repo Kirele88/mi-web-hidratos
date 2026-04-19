@@ -344,6 +344,7 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 <th>Total HC</th>
 <th>Por ración</th>
 <th>PDF</th>
+<th>✏️</th>
 <th>❌</th>
 <th>✅</th>
 </tr>
@@ -364,6 +365,7 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 <th>Total HC</th>
 <th>Por ración</th>
 <th>PDF</th>
+<th>✏️</th>
 <th>❌</th>
 <th>✅</th>
 </tr>
@@ -413,6 +415,7 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 let ingredientes = {};
 let recetas = [];
 let usuarioActual = null;
+let imagenPDF = "";
 
 let pendientes = [];
 let datosTemp = null;
@@ -590,8 +593,15 @@ let fila = `
 <td>${r.nombre}</td>
 <td>${r.total.toFixed(2)}</td>
 <td>${r.pp.toFixed(2)}</td>
+
 <td><button class="btn" onclick="pdf(${i})">PDF</button></td>
+
+<td>
+<button class="btn" onclick="subirImagen()">✏️</button>
+</td>
+
 <td><button class="btn-rojo" onclick="delRec(${i})">❌</button></td>
+
 <td><input type="checkbox" class="checkReceta" value="${i}"></td>
 </tr>
 `;
@@ -616,12 +626,48 @@ function irOnline(){
 document.getElementById("online").scrollIntoView({behavior:"smooth"});
 }
 function pdf(i){
+function subirImagen(){
+
+let input = document.createElement("input");
+input.type = "file";
+input.accept = "image/*";
+
+input.onchange = function(){
+
+let archivo = input.files[0];
+if(!archivo) return;
+
+let lector = new FileReader();
+
+lector.onload = function(e){
+imagenPDF = e.target.result;
+alert("Imagen añadida correctamente");
+}
+
+lector.readAsDataURL(archivo);
+
+}
+
+input.click();
+
+}
 
 let r = recetas[i];
 
 let contenido = `
 <html>
-<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
+<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;position:relative;">
+${imagenPDF ? `
+<img src="${imagenPDF}" style="
+position:absolute;
+top:0;
+right:0;
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+">
+` : ""}
 
 <div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
 ${r.nombre}
@@ -906,7 +952,20 @@ padding:10px;
 }
 </style>
 </head>
-<body>
+<body style="position:relative;">
+
+${imagenPDF ? `
+<img src="${imagenPDF}" style="
+position:absolute;
+top:0;
+right:20px;
+width:130px;
+height:130px;
+object-fit:cover;
+border-radius:10px;
+">
+` : ""}
+
 `;
 
 checks.forEach(c=>{

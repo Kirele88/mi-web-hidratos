@@ -853,21 +853,106 @@ alert("Selecciona alguna receta");
 return;
 }
 
-let i = 0;
-
-function siguiente(){
-
-if(i >= checks.length) return;
-
-pdf(Number(checks[i].value));
-
-i++;
-
-setTimeout(siguiente, 2000);
-
+let contenido = `
+<html>
+<head>
+<style>
+body{
+font-family:Arial;
+margin:30px;
+font-size:11px;
+text-align:center;
 }
 
-siguiente();
+table{
+width:85%;
+margin:auto;
+border-collapse:collapse;
+margin-bottom:25px;
+}
+
+td{
+border:1px solid black;
+padding:6px;
+text-align:center;
+}
+
+.pagina{
+page-break-after:always;
+margin-bottom:40px;
+}
+
+.titulo{
+border:1px solid black;
+padding:10px;
+font-size:16px;
+font-weight:bold;
+margin-bottom:25px;
+}
+</style>
+</head>
+<body>
+`;
+
+checks.forEach(c=>{
+
+let r = recetas[Number(c.value)];
+
+contenido += `
+<div class="pagina">
+
+<div class="titulo">${r.nombre}</div>
+
+<table>
+<tr>
+<td>Ingredientes</td>
+<td>Cantidad</td>
+<td>Hidratos Carbono</td>
+</tr>
+
+${r.lista.map(x=>`
+<tr>
+<td>${x.nom}</td>
+<td>${x.cant}</td>
+<td>${x.hc ? x.hc.toFixed(2) : ""}</td>
+</tr>
+`).join("")}
+
+</table>
+
+<table>
+<tr>
+<td style="width:70%">Raciones</td>
+<td>${r.personas}</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td style="width:70%">Total HC</td>
+<td>${r.total.toFixed(2)}</td>
+</tr>
+
+<tr>
+<td>Total HC por ración</td>
+<td>${r.pp.toFixed(2)}</td>
+</tr>
+</table>
+
+</div>
+`;
+
+});
+
+contenido += `
+</body>
+</html>
+`;
+
+let w = window.open("", "_blank");
+w.document.write(contenido);
+w.document.close();
+w.print();
 
 }
 async function borrarRecetasMarcadas(){

@@ -657,24 +657,32 @@ let r = recetas[i];
 
 let contenido = `
 <html>
-<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;position:relative;">
+<body style="font-family:Arial;margin:40px;font-size:9px;text-align:center;">
+
 ${imagenPDF ? `
+<div style="margin-bottom:25px;">
 <img src="${imagenPDF}" style="
-position:absolute;
-top:0;
-right:0;
-width:120px;
-height:120px;
+width:180px;
+height:110px;
 object-fit:cover;
 border-radius:10px;
+display:block;
+margin:auto;
 ">
+</div>
 ` : ""}
 
-<div style="border:1px solid black;padding:9px;margin-bottom:40px;font-size:14px;">
+<div style="
+border:1px solid black;
+padding:9px;
+margin-bottom:30px;
+font-size:14px;
+font-weight:bold;
+">
 ${r.nombre}
 </div>
 
-<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:30px;">
 <tr>
 <td style="border:1px solid black;text-align:center;">Ingredientes</td>
 <td style="border:1px solid black;text-align:center;">Cantidad</td>
@@ -691,7 +699,7 @@ ${r.lista.map(x=>`
 
 </table>
 
-<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:40px;">
+<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:30px;">
 <tr>
 <td style="border:1px solid black;width:70%;text-align:center;">Raciones</td>
 <td style="border:1px solid black;width:30%;text-align:center;">${r.personas}</td>
@@ -703,6 +711,7 @@ ${r.lista.map(x=>`
 <td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono</td>
 <td style="border:1px solid black;width:30%;text-align:center;">${r.total.toFixed(2)}</td>
 </tr>
+
 <tr>
 <td style="border:1px solid black;width:70%;text-align:center;">Total Hidratos Carbono por Ración</td>
 <td style="border:1px solid black;width:30%;text-align:center;">${r.pp.toFixed(2)}</td>
@@ -717,6 +726,7 @@ let w = window.open("", "_blank");
 w.document.write(contenido);
 w.document.close();
 w.print();
+
 }
 function mostrarIng(){
 

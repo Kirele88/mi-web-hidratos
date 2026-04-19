@@ -853,22 +853,24 @@ alert("Selecciona alguna receta");
 return;
 }
 
+let totalGeneral = 0;
+
 let contenido = `
 <html>
 <head>
 <style>
 body{
 font-family:Arial;
-margin:30px;
+margin:25px;
 font-size:11px;
 text-align:center;
 }
 
 table{
-width:85%;
+width:92%;
 margin:auto;
 border-collapse:collapse;
-margin-bottom:25px;
+margin-bottom:18px;
 }
 
 td{
@@ -877,17 +879,31 @@ padding:6px;
 text-align:center;
 }
 
-.pagina{
-page-break-after:always;
-margin-bottom:40px;
+.bloque{
+margin-bottom:28px;
+padding-bottom:10px;
+border-bottom:2px solid #999;
 }
 
 .titulo{
 border:1px solid black;
 padding:10px;
-font-size:16px;
+font-size:15px;
 font-weight:bold;
-margin-bottom:25px;
+margin-bottom:15px;
+}
+
+.totalFinal{
+width:92%;
+margin:30px auto 0 auto;
+border-collapse:collapse;
+font-size:14px;
+font-weight:bold;
+}
+
+.totalFinal td{
+border:2px solid black;
+padding:10px;
 }
 </style>
 </head>
@@ -897,9 +913,10 @@ margin-bottom:25px;
 checks.forEach(c=>{
 
 let r = recetas[Number(c.value)];
+totalGeneral += Number(r.total);
 
 contenido += `
-<div class="pagina">
+<div class="bloque">
 
 <div class="titulo">${r.nombre}</div>
 
@@ -925,14 +942,10 @@ ${r.lista.map(x=>`
 <td style="width:70%">Raciones</td>
 <td>${r.personas}</td>
 </tr>
-</table>
-
-<table>
 <tr>
-<td style="width:70%">Total HC</td>
+<td>Total HC</td>
 <td>${r.total.toFixed(2)}</td>
 </tr>
-
 <tr>
 <td>Total HC por ración</td>
 <td>${r.pp.toFixed(2)}</td>
@@ -945,6 +958,14 @@ ${r.lista.map(x=>`
 });
 
 contenido += `
+
+<table class="totalFinal">
+<tr>
+<td style="width:70%">Hidratos recetas totales</td>
+<td>${totalGeneral.toFixed(2)}</td>
+</tr>
+</table>
+
 </body>
 </html>
 `;

@@ -659,13 +659,14 @@ let contenido = `
 <html>
 <body style="font-family:Arial;margin:35px;font-size:10px;text-align:center;">
 
+<!-- ENCABEZADO -->
 <div style="
 width:100%;
 display:flex;
 justify-content:flex-end;
 align-items:center;
-margin-bottom:20px;
-min-height:60px;
+margin-bottom:15px;
+min-height:55px;
 ">
 
 ${imagenPDF ? `
@@ -678,61 +679,6 @@ opacity:0.95;
 ` : ""}
 
 </div>
-
-<div style="
-border:1px solid black;
-padding:10px;
-margin-bottom:25px;
-font-size:15px;
-font-weight:bold;
-">
-${r.nombre}
-</div>
-
-<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:25px;">
-<tr>
-<td style="border:1px solid black;">Ingredientes</td>
-<td style="border:1px solid black;">Cantidad</td>
-<td style="border:1px solid black;">Hidratos Carbono</td>
-</tr>
-
-${r.lista.map(x=>`
-<tr>
-<td style="border:1px solid black;">${x.nom}</td>
-<td style="border:1px solid black;">${x.cant}</td>
-<td style="border:1px solid black;">${x.hc ? x.hc.toFixed(2) : ""}</td>
-</tr>
-`).join("")}
-
-</table>
-
-<table style="width:85%;margin:auto;border-collapse:collapse;">
-<tr>
-<td style="border:1px solid black;width:70%;">Raciones</td>
-<td style="border:1px solid black;">${r.personas}</td>
-</tr>
-
-<tr>
-<td style="border:1px solid black;">Total HC</td>
-<td style="border:1px solid black;">${r.total.toFixed(2)}</td>
-</tr>
-
-<tr>
-<td style="border:1px solid black;">HC por ración</td>
-<td style="border:1px solid black;">${r.pp.toFixed(2)}</td>
-</tr>
-</table>
-
-</body>
-</html>
-`;
-
-let w = window.open("", "_blank");
-w.document.write(contenido);
-w.document.close();
-w.print();
-
-}
 
 <!-- TITULO -->
 <div style="
@@ -1246,4 +1192,3 @@ setTimeout(() => {
 
 </body>
 </html>
-

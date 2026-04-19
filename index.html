@@ -571,9 +571,14 @@ let online = document.getElementById('tablaOnline');
 tus.innerHTML='';
 online.innerHTML='';
 
-/* ordenar recetas */
+/* coger textos buscador */
+let buscadores = document.querySelectorAll("#recetas input");
+let buscarTus = buscadores[0].value.toLowerCase();
+let buscarOnline = buscadores[1].value.toLowerCase();
+
+/* ordenar */
 let ordenadas = [...recetas].sort((a,b)=>
-a.nombre.localeCompare(b.nombre, 'es', {numeric:true, sensitivity:'base'})
+a.nombre.localeCompare(b.nombre,'es',{numeric:true,sensitivity:'base'})
 );
 
 ordenadas.forEach(r=>{
@@ -592,11 +597,15 @@ let fila = `
 `;
 
 if(r.tipo && r.tipo.includes("tus")){
+if(r.nombre.toLowerCase().includes(buscarTus)){
 tus.innerHTML += fila;
+}
 }
 
 if(r.tipo && r.tipo.includes("online")){
+if(r.nombre.toLowerCase().includes(buscarOnline)){
 online.innerHTML += fila;
+}
 }
 
 });
@@ -667,12 +676,16 @@ function mostrarIng(){
 let t = document.getElementById('tablaIng');
 t.innerHTML='';
 
-/* ordenar ingredientes */
+let buscar = document.getElementById("buscarIng").value.toLowerCase();
+
+/* ordenar */
 let lista = Object.keys(ingredientes).sort((a,b)=>
-a.localeCompare(b, 'es', {numeric:true, sensitivity:'base'})
+a.localeCompare(b,'es',{numeric:true,sensitivity:'base'})
 );
 
 lista.forEach(i=>{
+
+if(!i.toLowerCase().includes(buscar)) return;
 
 t.innerHTML += `
 <tr>

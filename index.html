@@ -446,7 +446,11 @@ function ir(p){
 }
 
 function limpiar(l){
- return l.toLowerCase().replace('g','').replace('ml','').trim();
+ return l
+  .toLowerCase()
+  .replace(/\s*(\d+(?:[.,]\d+)?)\s*ml$/i, ' $1')
+  .replace(/\s*(\d+(?:[.,]\d+)?)\s*g$/i, ' $1')
+  .trim();
 }
 
 function calcular(){

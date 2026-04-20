@@ -909,37 +909,41 @@ async function cargarIngredientes() {
 document.addEventListener("keydown", function(e){
     let activa = document.querySelector(".pantalla.activa")?.id;
 
-    // --- TECLA ENTER ---
+    // --- TECLA ENTER (ENTRAR / CALCULAR / AÑADIR) ---
     if(e.key === "Enter"){
-        // Evita que se dispare si estás escribiendo en el cuadro de texto de la receta
-        if(document.activeElement.tagName === "TEXTAREA") return;
-
-        // Si estás en INICIO y NO hay sesión: Entra
-        if(activa === "inicio" && !usuarioActual){
+        // 1. Si el usuario no ha iniciado sesión, Enter siempre intenta Entrar
+        if(!usuarioActual){
             window.entrar();
             return;
         }
-        
-        // Funciones previas (añadir ingredientes, calcular receta, etc.)
+
+        // 2. Si ya hay sesión, Enter hace la acción de la pantalla actual
+        if(document.activeElement.tagName === "TEXTAREA") return; // No dispara si escribe en la receta
+
         if(activa === "ingredientes"){ addIng(); return; }
-        if(activa === "crear"){ calcular(); return; }
-        if(document.getElementById("nuevo")){
-            document.querySelector("#pregunta button").click();
-            return;
+        if(activa === "crear"){ 
+            // Si hay un cuadro de ingrediente desconocido abierto, confirma ese dato
+            if(document.getElementById("nuevo") && document.getElementById('pregunta').style.display !== 'none'){
+                document.querySelector("#pregunta button").click();
+            } else {
+                calcular(); 
+            }
+            return; 
         }
     }
 
-    // --- TECLA SHIFT (Mayúscula) ---
+    // --- TECLA SHIFT (SALIR / SALTAR) ---
     if(e.key === "Shift"){
-        // Si estás en INICIO y SÍ hay sesión: Sale
-        if(activa === "inicio" && usuarioActual){
-            window.salir();
+        // 1. Si hay una pregunta de ingrediente nuevo activa, Shift sirve para Saltar
+        if(document.getElementById("pregunta") && document.getElementById("pregunta").style.display !== "none"){
+            preguntar();
             return;
         }
 
-        // Función previa para saltar ingrediente desconocido
-        if(document.getElementById("pregunta") && document.getElementById("pregunta").style.display !== "none"){
-            preguntar();
+        // 2. Si hay sesión iniciada y no estamos saltando un ingrediente, Shift cierra sesión
+        if(usuarioActual){
+            window.salir();
+            return;
         }
     }
 });

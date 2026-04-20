@@ -1089,6 +1089,9 @@ w.document.write(contenido);
 w.document.close();
 w.print();
 
+/* DESELECCIONAR */
+checks.forEach(c => c.checked = false);
+
 }
 async function borrarRecetasMarcadas(){
 
@@ -1105,11 +1108,18 @@ for(let i of indices){
 }
 
 function borrarIngMarcados(){
+
 let checks = [...document.querySelectorAll(".checkIng:checked")];
 
 checks.forEach(c=>{
-delIng(c.value);
+ delIng(c.value);
 });
+
+/* DESELECCIONAR */
+document.querySelectorAll(".checkIng").forEach(c=>{
+ c.checked = false;
+});
+
 }
 window.registrar = async function () {
 

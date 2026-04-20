@@ -690,13 +690,9 @@ top:-75px;
 left:0;
 right:0;
 height:70px;
-text-align:right;
-}
-
-.encabezado img{
-max-width:180px;
-max-height:70px;
-height:auto;
+background-repeat:no-repeat;
+background-position:right center;
+background-size:auto 70px;
 }
 
 .contenido{
@@ -729,8 +725,13 @@ margin-bottom:25px;
 
 <body>
 
-<div class="encabezado">
-${r.imagen ? `<img src="${r.imagen}">` : ""}
+<div class="encabezado"
+style="
+background-image:url('${r.imagen || ""}');
+background-repeat:no-repeat;
+background-position:right center;
+background-size:auto 70px;
+">
 </div>
 
 <div class="contenido">

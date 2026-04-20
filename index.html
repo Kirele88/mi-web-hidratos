@@ -421,7 +421,7 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 let ingredientes = {};
 let recetas = [];
 let usuarioActual = null;
-let imagenPDF = "";
+let imagenSeleccionadas = "";
 
 let pendientes = [];
 let datosTemp = null;
@@ -607,7 +607,7 @@ let fila = `
 <td><button class="btn" onclick="pdf(${i})">PDF</button></td>
 
 <td>
-<button class="btn" onclick="subirImagen()">✏️</button>
+<button class="btn" onclick="subirImagen(${i})">✏️</button>
 </td>
 
 <td><button class="btn-rojo" onclick="delRec(${i})">❌</button></td>
@@ -635,7 +635,7 @@ online.innerHTML += fila;
 function irOnline(){
 document.getElementById("online").scrollIntoView({behavior:"smooth"});
 }
-function subirImagen(){
+function subirImagen(i){
 
 let input = document.createElement("input");
 input.type = "file";
@@ -649,8 +649,11 @@ if(!archivo) return;
 let lector = new FileReader();
 
 lector.onload = function(e){
-imagenPDF = e.target.result;
+
+recetas[i].imagen = e.target.result;
+
 alert("Imagen añadida correctamente");
+
 }
 
 lector.readAsDataURL(archivo);
@@ -721,7 +724,7 @@ margin-bottom:25px;
 <body>
 
 <div class="encabezado">
-${imagenPDF ? `<img src="${imagenPDF}">` : ""}
+${r.imagen ? `<img src="${r.imagen}">` : ""}
 </div>
 
 <div class="titulo">${r.nombre}</div>
@@ -1020,9 +1023,6 @@ padding:10px;
 </head>
 <body>
 
-<div class="encabezado">
-${imagenPDF ? `<img src="${imagenPDF}">` : ""}
-</div>
 `;
 
 checks.forEach(c=>{
@@ -1034,6 +1034,10 @@ totalRaciones += Number(r.pp);
 
 contenido += `
 <div class="bloque">
+
+<div class="encabezado">
+${r.imagen ? `<img src="${r.imagen}">` : ""}
+</div>
 
 <div class="titulo">${r.nombre}</div>
 

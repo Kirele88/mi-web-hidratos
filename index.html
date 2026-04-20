@@ -1139,17 +1139,19 @@ document.getElementById("pass").value
 
 alert("Cuenta creada correctamente");
 
-} catch(error){
+catch(error){
 
 if(error.code === "auth/email-already-in-use"){
 alert("Ese correo ya está registrado");
 }
-else{
-alert("No se pudo crear la cuenta");
+else if(error.code === "auth/weak-password"){
+alert("La contraseña debe tener mínimo 6 caracteres");
 }
-
-console.error(error);
-
+else if(error.code === "auth/invalid-email"){
+alert("Correo no válido");
+}
+else{
+alert(error.code);
 }
 
 }

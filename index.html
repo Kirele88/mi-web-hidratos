@@ -666,29 +666,73 @@ input.click();
 
 function pdf(i){
     let r = recetas[i];
+
     let contenido = `
     <html>
     <head>
     <style>
-        body{ font-family:Arial; font-size:10px; text-align:center; margin:20px; }
-        .encabezado{ width:100%; text-align:right; margin-bottom:20px; min-height:70px; }
-        .encabezado img{ max-width:180px; max-height:70px; height:auto; }
-        table{ width:85%; margin:auto; border-collapse:collapse; margin-bottom:25px; }
-        td{ border:1px solid black; padding:6px; text-align:center; }
-        .bloque{ margin-bottom:45px; page-break-inside:avoid; }
-        .titulo{ border:1px solid black; padding:10px; font-size:15px; font-weight:bold; margin-bottom:25px; }
+        body{
+            font-family:Arial;
+            font-size:10px;
+            text-align:center;
+            margin:20px;
+        }
+
+        .encabezado{
+            width:100%;
+            text-align:right;
+            margin-bottom:20px;
+            min-height:70px;
+        }
+
+        .encabezado img{
+            max-width:180px;
+            max-height:70px;
+            height:auto;
+        }
+
+        table{
+            width:85%;
+            margin:auto;
+            border-collapse:collapse;
+            margin-bottom:25px;
+        }
+
+        td{
+            border:1px solid black;
+            padding:6px;
+            text-align:center;
+        }
+
+        .bloque{
+            margin-bottom:45px;
+            page-break-inside:avoid;
+        }
+
+        .titulo{
+            border:1px solid black;
+            padding:10px;
+            font-size:15px;
+            font-weight:bold;
+            margin-bottom:25px;
+        }
     </style>
     </head>
     <body>
         <div class="bloque">
-            <div class="encabezado">${r.imagen ? `<img src="${r.imagen}">` : ""}</div>
+            <div class="encabezado">
+                ${r.imagen ? `<img src="${r.imagen}">` : ""}
+            </div>
+
             <div class="titulo">${r.nombre}</div>
+
             <table>
                 <tr>
                     <td style="font-weight:bold">Ingredientes</td>
                     <td style="font-weight:bold">Cantidad</td>
                     <td style="font-weight:bold">Hidratos Carbono</td>
                 </tr>
+
                 ${r.lista.map(x=>`
                 <tr>
                     <td>${x.nom}</td>
@@ -697,19 +741,36 @@ function pdf(i){
                 </tr>
                 `).join("")}
             </table>
+
             <table>
-                <tr><td style="width:70%">Raciones</td><td>${r.personas}</td></tr>
-                <tr><td>Total HC</td><td>${r.total.toFixed(2)}</td></tr>
-                <tr><td>Total HC por ración</td><td>${r.pp.toFixed(2)}</td></tr>
+                <tr>
+                    <td style="width:70%">Raciones</td>
+                    <td>${r.personas}</td>
+                </tr>
+                <tr>
+                    <td>Total HC</td>
+                    <td>${r.total.toFixed(2)}</td>
+                </tr>
+                <tr>
+                    <td>Total HC por ración</td>
+                    <td>${r.pp.toFixed(2)}</td>
+                </tr>
             </table>
         </div>
     </body>
-    </html>`;
+    </html>
+    `;
+
     let w = window.open("", "_blank");
     w.document.write(contenido);
     w.document.close();
-    setTimeout(() => { w.print(); }, 500);
+    
+    // Un pequeño delay asegura que la imagen cargue antes de imprimir
+    setTimeout(() => {
+        w.print();
+    }, 500);
 }
+
 function mostrarIng(){
 
 let t = document.getElementById('tablaIng');

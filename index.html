@@ -972,6 +972,7 @@ text-align:center;
 
 .bloque{
 margin-bottom:45px;
+page-break-after:always;
 page-break-inside:avoid;
 }
 
@@ -998,20 +999,6 @@ padding:10px;
 </style>
 </head>
 <body>
-
-<!-- ENCABEZADO IGUAL QUE PDF INDIVIDUAL -->
-<div class="encabezado">
-
-${imagenPDF ? `
-<img src="${imagenPDF}" style="
-max-width:180px;
-max-height:70px;
-object-fit:contain;
-opacity:0.95;
-">
-` : ""}
-
-</div>
 `;
 
 checks.forEach(c=>{
@@ -1023,6 +1010,17 @@ totalRaciones += Number(r.pp);
 
 contenido += `
 <div class="bloque">
+
+<div class="encabezado">
+${imagenPDF ? `
+<img src="${imagenPDF}" style="
+max-width:180px;
+max-height:70px;
+object-fit:contain;
+opacity:0.95;
+">
+` : ""}
+</div>
 
 <div class="titulo">${r.nombre}</div>
 
@@ -1066,7 +1064,6 @@ ${r.lista.map(x=>`
 });
 
 contenido += `
-
 <table class="totalFinal">
 <tr>
 <td style="width:70%">Total HC recetas</td>

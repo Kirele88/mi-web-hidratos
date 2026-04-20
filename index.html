@@ -664,124 +664,68 @@ input.click();
 
 }
 
-function pdf(i){
+async function pdf(i){
 
+const { jsPDF } = window.jspdf;
 let r = recetas[i];
 
-let contenido = `
-<html>
-<head>
-<style>
+let doc = new jsPDF("p","mm","a4");
 
-@page{
-margin:95px 35px 35px 35px;
+let y = 15;
+const pageW = 210;
+const pageH = 297;
+
+function encabezado(){
+  if(r.imagen){
+    doc.addImage(r.imagen,"JPEG",150,8,40,18);
+  }
 }
 
-body{
-font-family:Arial;
-font-size:10px;
-text-align:center;
-margin:0;
+function nuevaPagina(){
+  doc.addPage();
+  y = 15;
+  encabezado();
 }
 
-.encabezado{
-position:fixed;
-top:-75px;
-left:0;
-right:0;
-height:70px;
-background-repeat:no-repeat;
-background-position:right center;
-background-size:auto 70px;
+encabezado();
+
+doc.setFontSize(16);
+doc.text(r.nombre, 15, y+10);
+y += 20;
+
+doc.setFontSize(10);
+
+doc.rect(15,y,180,8);
+doc.text("Ingredientes",25,y+5);
+doc.text("Cantidad",100,y+5);
+doc.text("HC",165,y+5);
+y += 8;
+
+for(let item of r.lista){
+
+  if(y > 270) nuevaPagina();
+
+  doc.rect(15,y,180,8);
+  doc.text(String(item.nom),20,y+5);
+  doc.text(String(item.cant),105,y+5);
+  doc.text(String(item.hc ? item.hc.toFixed(2) : ""),165,y+5);
+
+  y += 8;
 }
 
-.contenido{
-margin-top:10px;
-}
+y += 8;
 
-table{
-width:85%;
-margin:auto;
-border-collapse:collapse;
-margin-bottom:25px;
-}
+if(y > 260) nuevaPagina();
 
-td{
-border:1px solid black;
-padding:6px;
-text-align:center;
-}
+doc.text("Raciones: " + r.personas,15,y);
+y += 7;
 
-.titulo{
-border:1px solid black;
-padding:10px;
-font-size:15px;
-font-weight:bold;
-margin-bottom:25px;
-}
+doc.text("Total HC: " + r.total.toFixed(2),15,y);
+y += 7;
 
-</style>
-</head>
+doc.text("HC por ración: " + r.pp.toFixed(2),15,y);
 
-<body>
-
-<div class="encabezado"
-style="
-background-image:url('${r.imagen || ""}');
-background-repeat:no-repeat;
-background-position:right center;
-background-size:auto 70px;
-">
-</div>
-
-<div class="contenido">
-
-<div class="titulo">${r.nombre}</div>
-
-<table>
-<tr>
-<td>Ingredientes</td>
-<td>Cantidad</td>
-<td>Hidratos Carbono</td>
-</tr>
-
-${r.lista.map(x=>`
-<tr>
-<td>${x.nom}</td>
-<td>${x.cant}</td>
-<td>${x.hc ? x.hc.toFixed(2) : ""}</td>
-</tr>
-`).join("")}
-
-</table>
-
-<table>
-<tr>
-<td style="width:70%">Raciones</td>
-<td>${r.personas}</td>
-</tr>
-
-<tr>
-<td>Total HC</td>
-<td>${r.total.toFixed(2)}</td>
-</tr>
-
-<tr>
-<td>Total HC por ración</td>
-<td>${r.pp.toFixed(2)}</td>
-</tr>
-</table>
-
-</div>
-</body>
-</html>
-`;
-
-let w = window.open("", "_blank");
-w.document.write(contenido);
-w.document.close();
-w.print();
-
+doc.save(r.nombre + ".pdf");
 }
 function mostrarIng(){
 
@@ -1282,6 +1226,8 @@ setTimeout(() => {
 
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+ 
 </body>
 </html>
 

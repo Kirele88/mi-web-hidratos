@@ -685,16 +685,22 @@ margin:0;
 }
 
 .encabezado{
-width:100%;
+position:fixed;
+top:-75px;
+left:0;
+right:0;
+height:70px;
 text-align:right;
-margin-bottom:20px;
-min-height:70px;
 }
 
 .encabezado img{
 max-width:180px;
 max-height:70px;
 height:auto;
+}
+
+.contenido{
+margin-top:10px;
 }
 
 table{
@@ -726,6 +732,8 @@ margin-bottom:25px;
 <div class="encabezado">
 ${r.imagen ? `<img src="${r.imagen}">` : ""}
 </div>
+
+<div class="contenido">
 
 <div class="titulo">${r.nombre}</div>
 
@@ -763,6 +771,7 @@ ${r.lista.map(x=>`
 </tr>
 </table>
 
+</div>
 </body>
 </html>
 `;

@@ -663,7 +663,13 @@ let contenido = `
 <html>
 <head>
 <style>
-@media print{
+body{
+font-family:Arial;
+margin:35px;
+padding-top:80px;
+font-size:10px;
+text-align:center;
+}
 
 .logoFijo{
 position:fixed;
@@ -671,26 +677,8 @@ top:10px;
 right:20px;
 width:160px;
 height:auto;
-z-index:9999;
 opacity:0.95;
-}
-
-body{
-margin:35px;
-padding-top:70px;
-font-family:Arial;
-font-size:10px;
-text-align:center;
-}
-
-}
-
-body{
-font-family:Arial;
-margin:35px;
-padding-top:70px;
-font-size:10px;
-text-align:center;
+z-index:9999;
 }
 
 table{
@@ -706,11 +694,6 @@ padding:6px;
 text-align:center;
 }
 
-.bloque{
-margin-bottom:45px;
-page-break-inside:avoid;
-}
-
 .titulo{
 border:1px solid black;
 padding:10px;
@@ -718,24 +701,51 @@ font-size:15px;
 font-weight:bold;
 margin-bottom:25px;
 }
-
-.totalFinal{
-width:85%;
-margin:30px auto 0 auto;
-border-collapse:collapse;
-font-size:12px;
-font-weight:bold;
-}
-
-.totalFinal td{
-border:2px solid black;
-padding:10px;
-}
 </style>
 </head>
+
 <body>
 
 ${imagenPDF ? `<img src="${imagenPDF}" class="logoFijo">` : ""}
+
+<div class="titulo">${r.nombre}</div>
+
+<table>
+<tr>
+<td>Ingredientes</td>
+<td>Cantidad</td>
+<td>Hidratos Carbono</td>
+</tr>
+
+${r.lista.map(x=>`
+<tr>
+<td>${x.nom}</td>
+<td>${x.cant}</td>
+<td>${x.hc ? x.hc.toFixed(2) : ""}</td>
+</tr>
+`).join("")}
+
+</table>
+
+<table>
+<tr>
+<td style="width:70%">Raciones</td>
+<td>${r.personas}</td>
+</tr>
+
+<tr>
+<td>Total HC</td>
+<td>${r.total.toFixed(2)}</td>
+</tr>
+
+<tr>
+<td>Total HC por ración</td>
+<td>${r.pp.toFixed(2)}</td>
+</tr>
+</table>
+
+</body>
+</html>
 `;
 
 let w = window.open("", "_blank");

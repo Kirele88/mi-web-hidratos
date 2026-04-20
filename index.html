@@ -661,92 +661,81 @@ let r = recetas[i];
 
 let contenido = `
 <html>
-<body style="font-family:Arial;margin:35px;font-size:10px;text-align:center;">
+<head>
+<style>
+@media print{
 
-<!-- ENCABEZADO -->
-<div style="
-width:100%;
-display:flex;
-justify-content:flex-end;
-align-items:center;
-margin-bottom:15px;
-min-height:55px;
-">
-
-${imagenPDF ? `
-<img src="${imagenPDF}" style="
+.logoFijo{
 position:fixed;
-top:0;
-right:0;
-max-width:180px;
-max-height:70px;
-object-fit:contain;
+top:10px;
+right:20px;
+width:160px;
+height:auto;
+z-index:9999;
 opacity:0.95;
-">
-` : ""}
+}
 
-</div>
+body{
+margin:35px;
+padding-top:70px;
+font-family:Arial;
+font-size:10px;
+text-align:center;
+}
 
-<!-- TITULO -->
-<div style="
+}
+
+body{
+font-family:Arial;
+margin:35px;
+padding-top:70px;
+font-size:10px;
+text-align:center;
+}
+
+table{
+width:85%;
+margin:auto;
+border-collapse:collapse;
+margin-bottom:25px;
+}
+
+td{
+border:1px solid black;
+padding:6px;
+text-align:center;
+}
+
+.bloque{
+margin-bottom:45px;
+page-break-inside:avoid;
+}
+
+.titulo{
 border:1px solid black;
 padding:10px;
-margin-bottom:25px;
 font-size:15px;
 font-weight:bold;
-">
-${r.nombre}
-</div>
+margin-bottom:25px;
+}
 
-<!-- TABLA INGREDIENTES -->
-<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:25px;">
-<tr>
-<td style="border:1px solid black;">Ingredientes</td>
-<td style="border:1px solid black;">Cantidad</td>
-<td style="border:1px solid black;">Hidratos Carbono</td>
-</tr>
+.totalFinal{
+width:85%;
+margin:30px auto 0 auto;
+border-collapse:collapse;
+font-size:12px;
+font-weight:bold;
+}
 
-${r.lista.map(x=>`
-<tr>
-<td style="border:1px solid black;">
-${x.nom.charAt(0).toUpperCase()+x.nom.slice(1)}
-</td>
+.totalFinal td{
+border:2px solid black;
+padding:10px;
+}
+</style>
+</head>
+<body>
 
-<td style="border:1px solid black;">
-${x.cant}
-</td>
-
-<td style="border:1px solid black;">
-${x.hc ? x.hc.toFixed(2) : ""}
-</td>
-</tr>
-`).join("")}
-
-</table>
-
-<!-- RACIONES -->
-<table style="width:85%;margin:auto;border-collapse:collapse;margin-bottom:25px;">
-<tr>
-<td style="border:1px solid black;width:70%;">Raciones</td>
-<td style="border:1px solid black;">${r.personas}</td>
-</tr>
-</table>
-
-<!-- TOTALES -->
-<table style="width:85%;margin:auto;border-collapse:collapse;">
-<tr>
-<td style="border:1px solid black;width:70%;">Total Hidratos Carbono</td>
-<td style="border:1px solid black;">${r.total.toFixed(2)}</td>
-</tr>
-
-<tr>
-<td style="border:1px solid black;">Total HC por Ración</td>
-<td style="border:1px solid black;">${r.pp.toFixed(2)}</td>
-</tr>
-</table>
-
-</body>
-</html>
+${imagenPDF ? `<img src="${imagenPDF}" class="logoFijo">` : ""}
 `;
 
 let w = window.open("", "_blank");
@@ -1002,18 +991,6 @@ padding:10px;
 </style>
 </head>
 <body>
-
-${imagenPDF ? `
-<img src="${imagenPDF}" style="
-position:fixed;
-top:15px;
-right:20px;
-width:160px;
-height:auto;
-opacity:0.95;
-z-index:999;
-">
-` : ""}
 
 `;
 

@@ -1139,7 +1139,7 @@ document.getElementById("pass").value
 
 alert("Cuenta creada correctamente");
 
-catch(error){
+} catch(error){
 
 if(error.code === "auth/email-already-in-use"){
 alert("Ese correo ya está registrado");
@@ -1152,6 +1152,8 @@ alert("Correo no válido");
 }
 else{
 alert(error.code);
+}
+
 }
 
 }

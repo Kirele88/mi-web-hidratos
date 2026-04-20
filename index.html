@@ -262,6 +262,12 @@ style="width:220px;padding:8px;margin:5px;">
 <button class="btn" onclick="entrar()">Entrar</button>
 <button class="btn-rojo" onclick="salir()">Salir</button>
 
+<br>
+
+<button class="btn" onclick="recuperarPass()" style="margin-top:8px;">
+¿Olvidaste tu contraseña?
+</button>
+
 </div>
 
 <nav>
@@ -1166,6 +1172,33 @@ document.getElementById("pass").value = "";
 alert("Sesión cerrada");
 
 }
+window.recuperarPass = async function () {
+
+let correo = document.getElementById("mail").value.trim();
+
+if(!correo){
+alert("Escribe tu correo primero");
+return;
+}
+
+try{
+
+await window.sendPasswordResetEmail(
+window.auth,
+correo
+);
+
+alert("Te hemos enviado un correo para cambiar la contraseña.");
+
+}catch(error){
+
+alert("No se pudo enviar el correo.");
+
+console.error(error);
+ 
+}
+
+}
 </script>
 
 <script type="module">
@@ -1183,7 +1216,8 @@ getAuth,
 createUserWithEmailAndPassword,
 signInWithEmailAndPassword,
 signOut,
-onAuthStateChanged
+onAuthStateChanged,
+sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 const firebaseConfig = {
   apiKey: "AIzaSyB0zzwT9hTW8TPlNCUWKkDJlN1JxQox_vY",
@@ -1203,6 +1237,7 @@ window.auth = auth;
 window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
 window.signInWithEmailAndPassword = signInWithEmailAndPassword;
 window.signOut = signOut;
+window.sendPasswordResetEmail = sendPasswordResetEmail;
 
 window.db = db;
 window.addDoc = addDoc;

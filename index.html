@@ -665,123 +665,110 @@ input.click();
 }
 
 function pdf(i){
+    let r = recetas[i];
 
-let r = recetas[i];
+    let contenido = `
+    <html>
+    <head>
+    <style>
+        body{
+            font-family:Arial;
+            font-size:10px;
+            text-align:center;
+            margin:20px;
+        }
 
-let contenido = `
-<html>
-<head>
-<style>
+        .encabezado{
+            width:100%;
+            text-align:right;
+            margin-bottom:20px;
+            min-height:70px;
+        }
 
-@page{
-margin:95px 35px 35px 35px;
-}
+        .encabezado img{
+            max-width:180px;
+            max-height:70px;
+            height:auto;
+        }
 
-body{
-font-family:Arial;
-font-size:10px;
-text-align:center;
-margin:0;
-}
+        table{
+            width:85%;
+            margin:auto;
+            border-collapse:collapse;
+            margin-bottom:25px;
+        }
 
-.encabezado{
-position:fixed;
-top:-75px;
-left:0;
-right:0;
-height:70px;
-background-repeat:no-repeat;
-background-position:right center;
-background-size:auto 70px;
-}
+        td{
+            border:1px solid black;
+            padding:6px;
+            text-align:center;
+        }
 
-.contenido{
-margin-top:10px;
-}
+        .bloque{
+            margin-bottom:45px;
+            page-break-inside:avoid;
+        }
 
-table{
-width:85%;
-margin:auto;
-border-collapse:collapse;
-margin-bottom:25px;
-}
+        .titulo{
+            border:1px solid black;
+            padding:10px;
+            font-size:15px;
+            font-weight:bold;
+            margin-bottom:25px;
+        }
+    </style>
+    </head>
+    <body>
+        <div class="bloque">
+            <div class="encabezado">
+                ${r.imagen ? `<img src="${r.imagen}">` : ""}
+            </div>
 
-td{
-border:1px solid black;
-padding:6px;
-text-align:center;
-}
+            <div class="titulo">${r.nombre}</div>
 
-.titulo{
-border:1px solid black;
-padding:10px;
-font-size:15px;
-font-weight:bold;
-margin-bottom:25px;
-}
+            <table>
+                <tr>
+                    <td style="font-weight:bold">Ingredientes</td>
+                    <td style="font-weight:bold">Cantidad</td>
+                    <td style="font-weight:bold">Hidratos Carbono</td>
+                </tr>
 
-</style>
-</head>
+                ${r.lista.map(x=>`
+                <tr>
+                    <td>${x.nom}</td>
+                    <td>${x.cant}</td>
+                    <td>${x.hc ? x.hc.toFixed(2) : "0.00"}</td>
+                </tr>
+                `).join("")}
+            </table>
 
-<body>
+            <table>
+                <tr>
+                    <td style="width:70%">Raciones</td>
+                    <td>${r.personas}</td>
+                </tr>
+                <tr>
+                    <td>Total HC</td>
+                    <td>${r.total.toFixed(2)}</td>
+                </tr>
+                <tr>
+                    <td>Total HC por ración</td>
+                    <td>${r.pp.toFixed(2)}</td>
+                </tr>
+            </table>
+        </div>
+    </body>
+    </html>
+    `;
 
-<div class="encabezado"
-style="
-background-image:url('${r.imagen || ""}');
-background-repeat:no-repeat;
-background-position:right center;
-background-size:auto 70px;
-">
-</div>
-
-<div class="contenido">
-
-<div class="titulo">${r.nombre}</div>
-
-<table>
-<tr>
-<td>Ingredientes</td>
-<td>Cantidad</td>
-<td>Hidratos Carbono</td>
-</tr>
-
-${r.lista.map(x=>`
-<tr>
-<td>${x.nom}</td>
-<td>${x.cant}</td>
-<td>${x.hc ? x.hc.toFixed(2) : ""}</td>
-</tr>
-`).join("")}
-
-</table>
-
-<table>
-<tr>
-<td style="width:70%">Raciones</td>
-<td>${r.personas}</td>
-</tr>
-
-<tr>
-<td>Total HC</td>
-<td>${r.total.toFixed(2)}</td>
-</tr>
-
-<tr>
-<td>Total HC por ración</td>
-<td>${r.pp.toFixed(2)}</td>
-</tr>
-</table>
-
-</div>
-</body>
-</html>
-`;
-
-let w = window.open("", "_blank");
-w.document.write(contenido);
-w.document.close();
-w.print();
-
+    let w = window.open("", "_blank");
+    w.document.write(contenido);
+    w.document.close();
+    
+    // Un pequeño delay asegura que la imagen cargue antes de imprimir
+    setTimeout(() => {
+        w.print();
+    }, 500);
 }
 function mostrarIng(){
 
@@ -1284,5 +1271,4 @@ setTimeout(() => {
 
 </body>
 </html>
-
 

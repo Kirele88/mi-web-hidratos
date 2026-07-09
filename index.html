@@ -298,7 +298,52 @@ onclick="seleccionarModo('individual')">
 </header>
 
 <div id="login" style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
+<div id="loginEmpresa"
+style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
+<h2>Sesión Empresa</h2>
+
+<input id="mailEmpresa"
+placeholder="Correo empresa"
+style="width:220px;padding:8px;margin:5px;">
+
+<input id="passEmpresa"
+type="password"
+placeholder="Contraseña"
+style="width:220px;padding:8px;margin:5px;">
+
+<button class="btn" onclick="entrarEmpresa()">
+Entrar
+</button>
+
+</div>
+
+ <div id="loginTrabajador"
+style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
+
+<h2>Sesión Trabajador</h2>
+
+<p id="nombreEmpresa"></p>
+
+<input
+id="nombreTrabajador"
+placeholder="Nombre trabajador"
+style="width:220px;padding:8px;margin:5px;">
+
+<input
+id="passTrabajador"
+type="password"
+placeholder="Contraseña"
+style="width:220px;padding:8px;margin:5px;">
+
+<button
+class="btn"
+onclick="entrarTrabajador()">
+Entrar
+</button>
+
+</div>
+ 
 <input id="mail" placeholder="Correo"
 style="width:220px;padding:8px;margin:5px;">
 
@@ -474,19 +519,24 @@ let pendientes = [];
 let datosTemp = null;
 let modo = "";
 
+let tipoSesion = "";          // individual o empresa
+let empresaActual = "";       // empresa que ha iniciado sesión
+let trabajadorActual = "";    // trabajador que ha iniciado sesión
+
 window.seleccionarModo = function(tipo){
 
-    modo = tipo;
+    tipoSesion = tipo;
 
     document.getElementById("selector").style.display = "none";
     document.getElementById("cabecera").style.display = "block";
-    document.getElementById("login").style.display = "block";
-    document.getElementById("menu").style.display = "flex";
 
-    ir("inicio");
+    if(tipo=="individual"){
+        document.getElementById("login").style.display="block";
+    }else{
+        document.getElementById("loginEmpresa").style.display="block";
+    }
 
 };
-
 function guardar(){
 }
 
@@ -1240,6 +1290,45 @@ alert("Sesión iniciada");
 
 }
 
+async function entrarTrabajador(){
+
+let nombre =
+document.getElementById("nombreTrabajador").value;
+
+let pass =
+document.getElementById("passTrabajador").value;
+
+trabajadorActual = nombre;
+
+document.getElementById("loginTrabajador").style.display="none";
+
+document.getElementById("menu").style.display="flex";
+
+ir("inicio");
+
+}
+ 
+ async function entrarEmpresa(){
+
+    let correo =
+    document.getElementById("mailEmpresa").value;
+
+    let pass =
+    document.getElementById("passEmpresa").value;
+
+    let res = await signInWithEmailAndPassword(auth,correo,pass);
+
+    empresaActual = correo;
+
+    document.getElementById("loginEmpresa").style.display="none";
+
+    document.getElementById("loginTrabajador").style.display="block";
+
+    document.getElementById("nombreEmpresa").innerHTML =
+    "Empresa: "+correo;
+
+}
+ 
 window.salir = async function () {
 
 await window.signOut(window.auth);

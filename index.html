@@ -504,20 +504,6 @@ caja.style.display = "none";
 }
 
 }
-
-let modo = "";
-
-function seleccionarModo(tipo){
-
-    modo = tipo;
-
-    document.getElementById("selector").style.display = "none";
-    document.getElementById("cabecera").style.display = "block";
-    document.getElementById("login").style.display = "block";
-    document.getElementById("menu").style.display = "flex";
-
-    ir("inicio");
-}
  
 function ir(p){
  document.querySelectorAll('.pantalla').forEach(x=>x.classList.remove('activa'));

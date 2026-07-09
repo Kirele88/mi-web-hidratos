@@ -248,7 +248,35 @@ flex-wrap:wrap;
 
 <body>
 
-<header>🍽️ Gestor de Hidratos de Carbono</header>
+<div id="selector" class="pantalla activa">
+
+<div class="card" style="max-width:500px;text-align:center;margin-top:80px;">
+
+<h1>Bienvenido</h1>
+
+<p>Selecciona cómo deseas acceder</p>
+
+<button class="btn"
+style="width:250px;height:60px;font-size:20px"
+onclick="seleccionarModo('empresa')">
+🏢 Empresa
+</button>
+
+<br><br>
+
+<button class="btn"
+style="width:250px;height:60px;font-size:20px"
+onclick="seleccionarModo('individual')">
+👤 Individual
+</button>
+
+</div>
+
+</div>
+ 
+<header id="cabecera" style="display:none;">
+🍽️ Gestor de Hidratos de Carbono
+</header>
 
 <div style="background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
@@ -270,7 +298,7 @@ style="width:220px;padding:8px;margin:5px;">
 
 </div>
 
-<nav>
+<nav id="menu" style="display:none;">
 <button onclick="ir('inicio')">INICIO</button>
 <button onclick="ir('crear')">AÑADIR RECETAS</button>
 <button onclick="ir('recetas')">VER RECETAS</button>
@@ -278,7 +306,7 @@ style="width:220px;padding:8px;margin:5px;">
 </nav>
 
 <!-- INICIO -->
-<div id="inicio" class="pantalla activa">
+<div id="inicio" class="pantalla">
 <div class="card">
 <p>Esta herramienta está diseñada para calcular los hidratos de carbono de recetas de forma rápida y sencilla.</p>
 <p>Introduce los ingredientes junto con sus cantidades y obtendrás automáticamente el total de hidratos de carbono.</p>
@@ -418,6 +446,25 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 
 <script>
 
+let modo = "";
+
+function seleccionarModo(tipo){
+
+    modo = tipo;
+
+    document.getElementById("selector").classList.remove("activa");
+    document.getElementById("inicio").classList.add("activa");
+
+    document.getElementById("cabecera").style.display="block";
+    document.getElementById("menu").style.display="flex";
+ 
+    if(tipo=="empresa"){
+        console.log("Modo empresa");
+    }else{
+        console.log("Modo individual");
+    }
+
+}
 let ingredientes = {};
 let recetas = [];
 let usuarioActual = null;

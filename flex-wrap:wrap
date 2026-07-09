@@ -242,7 +242,28 @@ gap:8px;
 align-items:center;
 flex-wrap:wrap;
 }
- 
+
+#selector{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:#f0f2f5;
+}
+
+.selectorCard{
+width:450px;
+max-width:90%;
+padding:45px;
+text-align:center;
+}
+
+.selectorBtn{
+width:100%;
+height:60px;
+font-size:20px;
+margin-top:15px;
+}
 </style>
 </head>
 
@@ -250,22 +271,20 @@ flex-wrap:wrap;
 
 <div id="selector" class="pantalla activa">
 
-<div class="card" style="max-width:500px;text-align:center;margin-top:80px;">
+<div class="card selectorCard">
 
-<h1>Bienvenido</h1>
+<h1>Acceso a la plataforma</h1>
 
-<p>Selecciona cómo deseas acceder</p>
+<p>¿Cómo deseas continuar?</p>
 
-<button class="btn"
-style="width:250px;height:60px;font-size:20px"
+<button class="btn selectorBtn"
 onclick="seleccionarModo('empresa')">
 🏢 Empresa
 </button>
 
 <br><br>
 
-<button class="btn"
-style="width:250px;height:60px;font-size:20px"
+<button class="btn selectorBtn"
 onclick="seleccionarModo('individual')">
 👤 Individual
 </button>
@@ -278,7 +297,7 @@ onclick="seleccionarModo('individual')">
 🍽️ Gestor de Hidratos de Carbono
 </header>
 
-<div style="background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
+<div id="login" style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
 <input id="mail" placeholder="Correo"
 style="width:220px;padding:8px;margin:5px;">
@@ -472,6 +491,20 @@ let imagenSeleccionadas = "";
 
 let pendientes = [];
 let datosTemp = null;
+let modo = "";
+
+function seleccionarModo(tipo){
+
+    modo = tipo;
+
+    document.getElementById("selector").classList.remove("activa");
+    document.getElementById("inicio").classList.add("activa");
+
+    document.getElementById("cabecera").style.display="block";
+    document.getElementById("menu").style.display="flex";
+    document.getElementById("login").style.display="block";
+
+}
 
 function guardar(){
 }

@@ -465,25 +465,6 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 
 <script>
 
-let modo = "";
-
-function seleccionarModo(tipo){
-
-    modo = tipo;
-
-    document.getElementById("selector").classList.remove("activa");
-    document.getElementById("inicio").classList.add("activa");
-
-    document.getElementById("cabecera").style.display="block";
-    document.getElementById("menu").style.display="flex";
- 
-    if(tipo=="empresa"){
-        console.log("Modo empresa");
-    }else{
-        console.log("Modo individual");
-    }
-
-}
 let ingredientes = {};
 let recetas = [];
 let usuarioActual = null;
@@ -497,12 +478,13 @@ function seleccionarModo(tipo){
 
     modo = tipo;
 
-    document.getElementById("selector").classList.remove("activa");
-    document.getElementById("inicio").classList.add("activa");
+    document.getElementById("selector").style.display = "none";
 
-    document.getElementById("cabecera").style.display="block";
-    document.getElementById("menu").style.display="flex";
-    document.getElementById("login").style.display="block";
+    document.getElementById("cabecera").style.display = "block";
+    document.getElementById("login").style.display = "block";
+    document.getElementById("menu").style.display = "flex";
+
+    ir("inicio");
 
 }
 

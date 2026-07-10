@@ -438,6 +438,40 @@ Entrar
 ¿Olvidaste tu contraseña?
 </button>
 
+<br><br>
+
+<button class="btn" onclick="mostrarNuevoTrabajador()">
+Nuevo trabajador
+</button>
+
+</div>
+
+<div id="crearTrabajador"
+style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
+
+<h2>Nuevo trabajador</h2>
+
+<input
+id="nuevoNombreTrabajador"
+placeholder="Nombre trabajador"
+style="width:220px;padding:8px;margin:5px;">
+
+<input
+id="nuevoPassTrabajador"
+type="password"
+placeholder="Contraseña"
+style="width:220px;padding:8px;margin:5px;">
+
+<button class="btn"
+onclick="crearTrabajador()">
+Crear trabajador
+</button>
+
+<button class="btn-rojo"
+onclick="cancelarNuevoTrabajador()">
+Cancelar
+</button>
+
 </div>
  
 <nav id="menu" style="display:none;">
@@ -649,6 +683,20 @@ function cancelarNuevoUsuario(){
 
 document.getElementById("crearUsuario").style.display="none";
 document.getElementById("login").style.display="block";
+
+}
+
+function mostrarNuevoTrabajador(){
+
+document.getElementById("loginTrabajador").style.display="none";
+document.getElementById("crearTrabajador").style.display="block";
+
+}
+
+function cancelarNuevoTrabajador(){
+
+document.getElementById("crearTrabajador").style.display="none";
+document.getElementById("loginTrabajador").style.display="block";
 
 }
  
@@ -1428,9 +1476,61 @@ console.log(error);
 
 async function entrarTrabajador(){
 
-alert("No existen trabajadores registrados todavía.");
+let nombre = document.getElementById("nombreTrabajador").value;
+let pass = document.getElementById("passTrabajador").value;
 
-return;
+const snap = await getDocs(collection(db,"trabajadores"));
+
+let encontrado = false;
+
+snap.forEach(doc=>{
+
+    let t = doc.data();
+
+    if(
+        t.empresa===empresaActual &&
+        t.nombre===nombre &&
+        t.pass===pass
+    ){
+        encontrado = true;
+    }
+
+});
+
+if(!encontrado){
+    alert("Nombre o contraseña incorrectos");
+    return;
+}
+
+trabajadorActual = nombre;
+
+document.getElementById("loginTrabajador").style.display="none";
+document.getElementById("menu").style.display="flex";
+
+cargarRecetas();
+
+ir("inicio");
+
+}
+trabajadorActual=nombre;
+
+document.getElementById("loginTrabajador").style.display="none";
+document.getElementById("menu").style.display="flex";
+
+cargarRecetas();
+
+ir("inicio");
+
+}
+
+trabajadorActual=nombre;
+
+document.getElementById("loginTrabajador").style.display="none";
+document.getElementById("menu").style.display="flex";
+
+cargarRecetas();
+
+ir("inicio");
 
 }
 
@@ -1500,6 +1600,27 @@ document.getElementById("loginEmpresa").style.display="block";
 alert(error.code);
 
 }
+
+}
+
+async function crearTrabajador(){
+
+let nombre=document.getElementById("nuevoNombreTrabajador").value;
+let pass=document.getElementById("nuevoPassTrabajador").value;
+
+await addDoc(
+collection(db,"trabajadores"),
+{
+
+empresa:empresaActual,
+nombre:nombre,
+pass:pass
+
+});
+
+alert("Trabajador creado correctamente");
+
+cancelarNuevoTrabajador();
 
 }
  

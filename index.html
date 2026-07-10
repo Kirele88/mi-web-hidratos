@@ -292,51 +292,6 @@ onclick="seleccionarModo('individual')">
 </div>
 
 </div>
- 
-
- <div id="loginTrabajador"
-style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
-
-<h2>Sesión Trabajador</h2>
-
-<p id="nombreEmpresa"></p>
-
-<input
-id="nombreTrabajador"
-placeholder="Nombre trabajador"
-style="width:220px;padding:8px;margin:5px;">
-
-<input
-id="passTrabajador"
-type="password"
-placeholder="Contraseña"
-style="width:220px;padding:8px;margin:5px;">
-
-<button
-class="btn"
-onclick="entrarTrabajador()">
-Entrar
-</button>
-
-</div>
- 
-<input id="mail" placeholder="Correo"
-style="width:220px;padding:8px;margin:5px;">
-
-<input id="pass" type="password" placeholder="Contraseña"
-style="width:220px;padding:8px;margin:5px;">
-
-<button class="btn" onclick="registrar()">Registrarse</button>
-<button class="btn" onclick="entrar()">Entrar</button>
-<button class="btn-rojo" onclick="salir()">Salir</button>
-
-<br>
-
-<button class="btn" onclick="recuperarPass()" style="margin-top:8px;">
-¿Olvidaste tu contraseña?
-</button>
-
-</div>
 
  <header id="cabecera" style="display:none;">
 🍽️ Gestor de Hidratos de Carbono
@@ -575,19 +530,19 @@ window.seleccionarModo = function(tipo){
     document.getElementById("selector").style.display = "none";
     document.getElementById("cabecera").style.display = "block";
 
-    document.getElementById("loginEmpresa").style.display="none";
-    document.getElementById("loginTrabajador").style.display="none";
+    document.getElementById("login").style.display = "none";
+    document.getElementById("loginEmpresa").style.display = "none";
+    document.getElementById("loginTrabajador").style.display = "none";
+
     if(tipo=="individual"){
 
-    document.getElementById("login").style.display="block";
+        document.getElementById("login").style.display = "block";
 
-}
-else{
+    }else{
 
-    document.getElementById("login").style.display="block";
-    document.getElementById("loginEmpresa").style.display="block";
+        document.getElementById("loginEmpresa").style.display = "block";
 
-}
+    }
 
 };
 function guardar(){

@@ -312,8 +312,8 @@ Entrar
 
 <br><br>
 
-<button class="btn" onclick="registrar()">
-Registrarse
+<button class="btn" onclick="mostrarNuevoUsuario()">
+Nuevo usuario
 </button>
 
 <br><br>
@@ -326,6 +326,30 @@ Registrarse
 
 </div>
 
+<div id="crearUsuario"
+style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
+
+<h2>Nuevo usuario</h2>
+
+<input id="mailNuevo"
+placeholder="Correo"
+style="width:220px;padding:8px;margin:5px;">
+
+<input id="passNuevo"
+type="password"
+placeholder="Contraseña"
+style="width:220px;padding:8px;margin:5px;">
+
+<button class="btn" onclick="registrar()">
+Crear cuenta
+</button>
+
+<button class="btn-rojo" onclick="cancelarNuevoUsuario()">
+Cancelar
+</button>
+
+</div>
+ 
 <!-- LOGIN EMPRESA -->
 <div id="loginEmpresa" style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
@@ -613,6 +637,21 @@ document.getElementById("crearEmpresa").style.display="none";
 document.getElementById("loginEmpresa").style.display="block";
 
 }
+
+function mostrarNuevoUsuario(){
+
+document.getElementById("login").style.display="none";
+document.getElementById("crearUsuario").style.display="block";
+
+}
+
+function cancelarNuevoUsuario(){
+
+document.getElementById("crearUsuario").style.display="none";
+document.getElementById("login").style.display="block";
+
+}
+ 
 function guardar(){
 }
 
@@ -1325,11 +1364,19 @@ try {
 
 await window.createUserWithEmailAndPassword(
 window.auth,
-document.getElementById("mail").value,
-document.getElementById("pass").value
+document.getElementById("mailNuevo").value,
+document.getElementById("passNuevo").value
 );
 
+await window.signOut(window.auth);
+
 alert("Cuenta creada correctamente");
+
+document.getElementById("crearUsuario").style.display = "none";
+document.getElementById("login").style.display = "block";
+
+document.getElementById("mailNuevo").value = "";
+document.getElementById("passNuevo").value = "";
 
 } catch(error){
 

@@ -324,6 +324,12 @@ Nuevo usuario
 
 <br>
 
+<br><br>
+
+<button class="btn-rojo" onclick="volverSelector()">
+Cancelar
+</button>
+ 
 </div>
 
 <div id="crearUsuario"
@@ -380,8 +386,13 @@ Entrar
 Nueva empresa
 </button>
 
-</div>
+<br><br>
 
+<button class="btn-rojo" onclick="volverSelector()">
+Cancelar
+</button>
+
+</div>
 <div id="crearEmpresa"
 style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
@@ -442,6 +453,12 @@ Entrar
 
 <button class="btn" onclick="mostrarNuevoTrabajador()">
 Nuevo trabajador
+</button>
+
+<br><br>
+
+<button class="btn-rojo" onclick="volverSelector()">
+Cancelar
 </button>
 
 </div>
@@ -698,6 +715,44 @@ function cancelarNuevoTrabajador(){
 document.getElementById("crearTrabajador").style.display="none";
 document.getElementById("loginTrabajador").style.display="block";
 
+}
+
+async function volverSelector(){
+
+    try{
+        if(window.auth && window.auth.currentUser){
+            await window.signOut(window.auth);
+        }
+    }catch(e){}
+
+    usuarioActual = null;
+    empresaActual = "";
+    trabajadorActual = "";
+    tipoSesion = "";
+
+    recetas = [];
+    mostrarRecetas();
+
+    document.getElementById("mail").value = "";
+    document.getElementById("pass").value = "";
+
+    document.getElementById("mailEmpresa").value = "";
+    document.getElementById("passEmpresa").value = "";
+
+    document.getElementById("nombreTrabajador").value = "";
+    document.getElementById("passTrabajador").value = "";
+
+    document.getElementById("login").style.display = "none";
+    document.getElementById("loginEmpresa").style.display = "none";
+    document.getElementById("loginTrabajador").style.display = "none";
+    document.getElementById("crearUsuario").style.display = "none";
+    document.getElementById("crearEmpresa").style.display = "none";
+    document.getElementById("crearTrabajador").style.display = "none";
+
+    document.getElementById("menu").style.display = "none";
+
+    document.getElementById("cabecera").style.display = "none";
+    document.getElementById("selector").style.display = "flex";
 }
  
 function guardar(){

@@ -312,7 +312,7 @@ Entrar
 
 <br><br>
 
-<button class="btn" onclick="mostrarRegistro()">
+<button class="btn" onclick="registrar()">
 Registrarse
 </button>
 
@@ -1350,7 +1350,9 @@ alert(error.code);
 
 }
 
-window.entrar = async function () {
+window.entrar = async function(){
+
+try{
 
 let res = await window.signInWithEmailAndPassword(
 window.auth,
@@ -1358,16 +1360,22 @@ document.getElementById("mail").value,
 document.getElementById("pass").value
 );
 
-usuarioActual = res.user;
+usuarioActual=res.user;
 
 await cargarRecetas();
-
-alert("Sesión iniciada");
 
 document.getElementById("login").style.display="none";
 document.getElementById("menu").style.display="flex";
 
 ir("inicio");
+
+}catch(error){
+
+alert("Correo o contraseña incorrectos");
+
+console.log(error);
+
+}
 
 }
 
@@ -1378,25 +1386,33 @@ alert("No existen trabajadores registrados todavía.");
 return;
 
 }
- 
- async function entrarEmpresa(){
 
-    let correo =
-    document.getElementById("mailEmpresa").value;
+async function entrarEmpresa(){
 
-    let pass =
-    document.getElementById("passEmpresa").value;
+let correo = document.getElementById("mailEmpresa").value;
+let pass = document.getElementById("passEmpresa").value;
 
-    let res = await signInWithEmailAndPassword(auth,correo,pass);
+try{
 
-    empresaActual = correo;
+let res = await window.signInWithEmailAndPassword(
+window.auth,
+correo,
+pass
+);
 
-    document.getElementById("loginEmpresa").style.display="none";
+empresaActual = correo;
 
-    document.getElementById("loginTrabajador").style.display="block";
+document.getElementById("loginEmpresa").style.display="none";
+document.getElementById("loginTrabajador").style.display="block";
 
-    document.getElementById("nombreEmpresa").innerHTML =
-    "Empresa: "+correo;
+document.getElementById("nombreEmpresa").innerHTML =
+"Empresa: " + correo;
+
+}catch(error){
+
+alert("Correo o contraseña incorrectos");
+
+}
 
 }
 
@@ -1408,9 +1424,15 @@ let pass = document.getElementById("passNuevaEmpresa").value;
 
 try{
 
-let res = await createUserWithEmailAndPassword(auth,correo,pass);
+let res = await window.createUserWithEmailAndPassword(
+window.auth,
+correo,
+pass
+);
 
-await addDoc(collection(db,"empresas"),{
+await window.addDoc(
+window.collection(window.db,"empresas"),
+{
 
 nombre:nombre,
 correo:correo,
@@ -1419,7 +1441,7 @@ fecha:new Date()
 
 });
 
-await signOut(auth);
+await window.signOut(window.auth);
 
 alert("Empresa creada correctamente");
 
@@ -1501,24 +1523,6 @@ alert("Todavía no hay trabajadores registrados.");
 
 }
 
-try{
-
-await window.sendPasswordResetEmail(
-window.auth,
-correo
-);
-
-alert("Te hemos enviado un correo para cambiar la contraseña.");
-
-}catch(error){
-
-alert("No se pudo enviar el correo.");
-
-console.error(error);
- 
-}
-
-}
 </script>
 
 <script type="module">

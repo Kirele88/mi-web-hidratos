@@ -323,24 +323,6 @@ Nuevo usuario
 </div>
 
 <br><br>
-
-<button class="btn" onclick="mostrarNuevoUsuario()">
-Nuevo usuario
-</button>
-
-<br><br>
-
-<button class="btn" onclick="recuperarPass()">
-¿Olvidaste tu contraseña?
-</button>
-
-<br>
-
-<br><br>
-
-<button class="btn-rojo" onclick="volverSelector()">
-Cancelar
-</button>
  
 </div>
 
@@ -368,35 +350,17 @@ Cancelar
 
 </div>
  
-<!-- LOGIN EMPRESA -->
-<div id="loginEmpresa" style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
-
-<h2>Sesión Empresa</h2>
-
-<input id="mailEmpresa"
-placeholder="Correo empresa"
-style="width:220px;padding:8px;margin:5px;">
-
-<input id="passEmpresa"
-type="password"
-placeholder="Contraseña"
-style="width:220px;padding:8px;margin:5px;">
-
 <div class="fila" style="justify-content:center;">
-    <button class="btn" onclick="entrarEmpresa()">
-Entrar
-</button>
 
-<button class="btn-rojo" onclick="volverSelector()">
-Cancelar
-</button>
+    <button class="btn" onclick="entrarEmpresa()">
+        Entrar
+    </button>
 
     <button class="btn-rojo" onclick="volverSelector()">
         Cancelar
     </button>
+
 </div>
- 
-<br><br>
 
 <br><br>
 
@@ -407,7 +371,6 @@ Cancelar
 <button class="btn" onclick="mostrarNuevaEmpresa()">
 Nueva empresa
 </button>
-
 <br><br>
 
 <button class="btn-rojo" onclick="volverSelector()">
@@ -471,6 +434,12 @@ Cancelar
 </button>
 
     <button class="btn-rojo" onclick="volverSelector()">
+        <div class="fila" style="justify-content:center;">
+    <button class="btn" onclick="entrarTrabajador()">
+        Entrar
+    </button>
+
+    <button class="btn-rojo" onclick="volverSelector()">
         Cancelar
     </button>
 </div>
@@ -485,12 +454,6 @@ Cancelar
 
 <button class="btn" onclick="mostrarNuevoTrabajador()">
 Nuevo trabajador
-</button>
-
-<br><br>
-
-<button class="btn-rojo" onclick="volverSelector()">
-Cancelar
 </button>
 
 </div>
@@ -747,73 +710,6 @@ function cancelarNuevoTrabajador(){
 document.getElementById("crearTrabajador").style.display="none";
 document.getElementById("loginTrabajador").style.display="block";
 
-}
-
-function volverSelector(){
-
-    if(window.auth){
-        window.signOut(window.auth);
-    }
-
-    usuarioActual = null;
-    empresaActual = "";
-    trabajadorActual = "";
-
-    // Limpiar cajas
-    document.getElementById("mail").value = "";
-    document.getElementById("pass").value = "";
-    document.getElementById("mailEmpresa").value = "";
-    document.getElementById("passEmpresa").value = "";
-    document.getElementById("nombreTrabajador").value = "";
-    document.getElementById("passTrabajador").value = "";
-
-    // Ocultar todo
-    document.getElementById("login").style.display = "none";
-    document.getElementById("loginEmpresa").style.display = "none";
-    document.getElementById("loginTrabajador").style.display = "none";
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("cabecera").style.display = "none";
-
-    // Mostrar selector inicial
-    document.getElementById("selector").style.display = "flex";
-}
-
-async function volverSelector(){
-
-    try{
-        if(window.auth && window.auth.currentUser){
-            await window.signOut(window.auth);
-        }
-    }catch(e){}
-
-    usuarioActual = null;
-    empresaActual = "";
-    trabajadorActual = "";
-    tipoSesion = "";
-
-    recetas = [];
-    mostrarRecetas();
-
-    document.getElementById("mail").value = "";
-    document.getElementById("pass").value = "";
-
-    document.getElementById("mailEmpresa").value = "";
-    document.getElementById("passEmpresa").value = "";
-
-    document.getElementById("nombreTrabajador").value = "";
-    document.getElementById("passTrabajador").value = "";
-
-    document.getElementById("login").style.display = "none";
-    document.getElementById("loginEmpresa").style.display = "none";
-    document.getElementById("loginTrabajador").style.display = "none";
-    document.getElementById("crearUsuario").style.display = "none";
-    document.getElementById("crearEmpresa").style.display = "none";
-    document.getElementById("crearTrabajador").style.display = "none";
-
-    document.getElementById("menu").style.display = "none";
-
-    document.getElementById("cabecera").style.display = "none";
-    document.getElementById("selector").style.display = "flex";
 }
  
 function guardar(){

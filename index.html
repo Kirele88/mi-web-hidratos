@@ -1476,51 +1476,40 @@ console.log(error);
 
 async function entrarTrabajador(){
 
-let nombre = document.getElementById("nombreTrabajador").value;
-let pass = document.getElementById("passTrabajador").value;
+    let nombre = document.getElementById("nombreTrabajador").value;
+    let pass = document.getElementById("passTrabajador").value;
 
-const snap = await getDocs(collection(db,"trabajadores"));
+    const snap = await getDocs(collection(db,"trabajadores"));
 
-let encontrado = false;
+    let encontrado = false;
 
-snap.forEach(doc=>{
+    snap.forEach(doc=>{
 
-    let t = doc.data();
+        let t = doc.data();
 
-    if(
-        t.empresa===empresaActual &&
-        t.nombre===nombre &&
-        t.pass===pass
-    ){
-        encontrado = true;
+        if(
+            t.empresa===empresaActual &&
+            t.nombre===nombre &&
+            t.pass===pass
+        ){
+            encontrado = true;
+        }
+
+    });
+
+    if(!encontrado){
+        alert("Nombre o contraseña incorrectos");
+        return;
     }
 
-});
+    trabajadorActual = nombre;
 
-if(!encontrado){
-    alert("Nombre o contraseña incorrectos");
-    return;
-}
+    document.getElementById("loginTrabajador").style.display="none";
+    document.getElementById("menu").style.display="flex";
 
-trabajadorActual = nombre;
+    cargarRecetas();
 
-document.getElementById("loginTrabajador").style.display="none";
-document.getElementById("menu").style.display="flex";
-
-cargarRecetas();
-
-ir("inicio");
-
-}
-trabajadorActual=nombre;
-
-document.getElementById("loginTrabajador").style.display="none";
-document.getElementById("menu").style.display="flex";
-
-cargarRecetas();
-
-ir("inicio");
-
+    ir("inicio");
 }
 
 trabajadorActual=nombre;

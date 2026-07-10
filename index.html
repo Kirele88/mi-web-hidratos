@@ -306,13 +306,8 @@ style="width:220px;padding:8px;margin:5px;">
 <input id="pass" type="password" placeholder="Contraseña"
 style="width:220px;padding:8px;margin:5px;">
 
-<div class="fila" style="justify-content:center;">
-    <button class="btn" onclick="entrar()">
+<button class="btn" onclick="entrar()">
 Entrar
-</button>
-
-<button class="btn-rojo" onclick="volverSelector()">
-Cancelar
 </button>
 
 <br><br>
@@ -320,10 +315,15 @@ Cancelar
 <button class="btn" onclick="mostrarNuevoUsuario()">
 Nuevo usuario
 </button>
-</div>
 
 <br><br>
- 
+
+<button class="btn" onclick="recuperarPass()">
+¿Olvidaste tu contraseña?
+</button>
+
+<br>
+
 </div>
 
 <div id="crearUsuario"
@@ -350,17 +350,25 @@ Cancelar
 
 </div>
  
-<div class="fila" style="justify-content:center;">
+<!-- LOGIN EMPRESA -->
+<div id="loginEmpresa" style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
-    <button class="btn" onclick="entrarEmpresa()">
-        Entrar
-    </button>
+<h2>Sesión Empresa</h2>
 
-    <button class="btn-rojo" onclick="volverSelector()">
-        Cancelar
-    </button>
+<input id="mailEmpresa"
+placeholder="Correo empresa"
+style="width:220px;padding:8px;margin:5px;">
 
-</div>
+<input id="passEmpresa"
+type="password"
+placeholder="Contraseña"
+style="width:220px;padding:8px;margin:5px;">
+
+<button class="btn" onclick="entrarEmpresa()">
+Entrar
+</button>
+
+<br><br>
 
 <br><br>
 
@@ -371,13 +379,9 @@ Cancelar
 <button class="btn" onclick="mostrarNuevaEmpresa()">
 Nueva empresa
 </button>
-<br><br>
-
-<button class="btn-rojo" onclick="volverSelector()">
-Cancelar
-</button>
 
 </div>
+
 <div id="crearEmpresa"
 style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
@@ -424,25 +428,9 @@ type="password"
 placeholder="Contraseña"
 style="width:220px;padding:8px;margin:5px;">
 
-<div class="fila" style="justify-content:center;">
-    <button class="btn" onclick="entrarTrabajador()">
+<button class="btn" onclick="entrarTrabajador()">
 Entrar
 </button>
-
-<button class="btn-rojo" onclick="volverSelector()">
-Cancelar
-</button>
-
-    <button class="btn-rojo" onclick="volverSelector()">
-        <div class="fila" style="justify-content:center;">
-    <button class="btn" onclick="entrarTrabajador()">
-        Entrar
-    </button>
-
-    <button class="btn-rojo" onclick="volverSelector()">
-        Cancelar
-    </button>
-</div>
 
 <br><br>
 
@@ -1679,40 +1667,6 @@ async function recuperarPassTrabajador(){
 
 alert("Todavía no hay trabajadores registrados.");
 
-}
-
-function volverSelector(){
-
-    // Cerrar sesión si la hubiera
-    if(window.auth){
-        window.signOut(window.auth);
-    }
-
-    usuarioActual = null;
-    empresaActual = "";
-    trabajadorActual = "";
-    recetas = [];
-
-    // Limpiar cajas
-    document.getElementById("mail").value = "";
-    document.getElementById("pass").value = "";
-    document.getElementById("mailEmpresa").value = "";
-    document.getElementById("passEmpresa").value = "";
-    document.getElementById("nombreTrabajador").value = "";
-    document.getElementById("passTrabajador").value = "";
-
-    // Ocultar todo
-    document.getElementById("login").style.display = "none";
-    document.getElementById("loginEmpresa").style.display = "none";
-    document.getElementById("loginTrabajador").style.display = "none";
-    document.getElementById("crearUsuario").style.display = "none";
-    document.getElementById("crearEmpresa").style.display = "none";
-    document.getElementById("crearTrabajador").style.display = "none";
-    document.getElementById("menu").style.display = "none";
-    document.getElementById("cabecera").style.display = "none";
-
-    // Volver al selector
-    document.getElementById("selector").style.display = "flex";
 }
 
 </script>

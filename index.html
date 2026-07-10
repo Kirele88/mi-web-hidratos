@@ -336,8 +336,44 @@ style="width:220px;padding:8px;margin:5px;">
 Entrar
 </button>
 
+<br><br>
+
+<button class="btn" onclick="mostrarNuevaEmpresa()">
+Nueva empresa
+</button>
+
 </div>
 
+<div id="crearEmpresa"
+style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
+
+<h2>Nueva empresa</h2>
+
+<input id="nombreNuevaEmpresa"
+placeholder="Nombre de la empresa"
+style="width:220px;padding:8px;margin:5px;">
+
+<input id="mailNuevaEmpresa"
+placeholder="Correo electrónico"
+style="width:220px;padding:8px;margin:5px;">
+
+<input id="passNuevaEmpresa"
+type="password"
+placeholder="Contraseña"
+style="width:220px;padding:8px;margin:5px;">
+
+<button class="btn"
+onclick="crearEmpresa()">
+Crear empresa
+</button>
+
+<button class="btn-rojo"
+onclick="cancelarNuevaEmpresa()">
+Cancelar
+</button>
+
+</div>
+ 
 <!-- LOGIN TRABAJADOR -->
 <div id="loginTrabajador" style="display:none;background:white;padding:15px;text-align:center;border-bottom:1px solid #ddd;">
 
@@ -545,6 +581,20 @@ window.seleccionarModo = function(tipo){
     }
 
 };
+
+function mostrarNuevaEmpresa(){
+
+document.getElementById("loginEmpresa").style.display="none";
+document.getElementById("crearEmpresa").style.display="block";
+
+}
+
+function cancelarNuevaEmpresa(){
+
+document.getElementById("crearEmpresa").style.display="none";
+document.getElementById("loginEmpresa").style.display="block";
+
+}
 function guardar(){
 }
 
@@ -1339,6 +1389,40 @@ ir("inicio");
 
     document.getElementById("nombreEmpresa").innerHTML =
     "Empresa: "+correo;
+
+}
+
+async function crearEmpresa(){
+
+let nombre = document.getElementById("nombreNuevaEmpresa").value;
+let correo = document.getElementById("mailNuevaEmpresa").value;
+let pass = document.getElementById("passNuevaEmpresa").value;
+
+try{
+
+let res = await createUserWithEmailAndPassword(auth,correo,pass);
+
+await addDoc(collection(db,"empresas"),{
+
+nombre:nombre,
+correo:correo,
+uid:res.user.uid,
+fecha:new Date()
+
+});
+
+await signOut(auth);
+
+alert("Empresa creada correctamente");
+
+document.getElementById("crearEmpresa").style.display="none";
+document.getElementById("loginEmpresa").style.display="block";
+
+}catch(error){
+
+alert(error.code);
+
+}
 
 }
  

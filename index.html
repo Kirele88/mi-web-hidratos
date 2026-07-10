@@ -306,15 +306,23 @@ style="width:220px;padding:8px;margin:5px;">
 <input id="pass" type="password" placeholder="Contraseña"
 style="width:220px;padding:8px;margin:5px;">
 
-<button class="btn" onclick="registrar()">Registrarse</button>
-<button class="btn" onclick="entrar()">Entrar</button>
-<button class="btn-rojo" onclick="salir()">Salir</button>
+<button class="btn" onclick="entrar()">
+Entrar
+</button>
 
-<br>
+<br><br>
 
-<button class="btn" onclick="recuperarPass()" style="margin-top:8px;">
+<button class="btn" onclick="mostrarRegistro()">
+Registrarse
+</button>
+
+<br><br>
+
+<button class="btn" onclick="recuperarPass()">
 ¿Olvidaste tu contraseña?
 </button>
+
+<br>
 
 </div>
 
@@ -337,6 +345,12 @@ Entrar
 </button>
 
 <br><br>
+
+<br><br>
+
+<button class="btn" onclick="recuperarPassEmpresa()">
+¿Olvidaste tu contraseña?
+</button>
 
 <button class="btn" onclick="mostrarNuevaEmpresa()">
 Nueva empresa
@@ -392,6 +406,12 @@ style="width:220px;padding:8px;margin:5px;">
 
 <button class="btn" onclick="entrarTrabajador()">
 Entrar
+</button>
+
+<br><br>
+
+<button class="btn" onclick="recuperarPassTrabajador()">
+¿Olvidaste tu contraseña?
 </button>
 
 </div>
@@ -1355,19 +1375,9 @@ ir("inicio");
 
 async function entrarTrabajador(){
 
-let nombre =
-document.getElementById("nombreTrabajador").value;
+alert("No existen trabajadores registrados todavía.");
 
-let pass =
-document.getElementById("passTrabajador").value;
-
-trabajadorActual = nombre;
-
-document.getElementById("loginTrabajador").style.display="none";
-
-document.getElementById("menu").style.display="flex";
-
-ir("inicio");
+return;
 
 }
  
@@ -1448,6 +1458,49 @@ let correo = document.getElementById("mail").value.trim();
 if(!correo){
 alert("Escribe tu correo primero");
 return;
+}
+
+try{
+
+await window.sendPasswordResetEmail(window.auth,correo);
+
+alert("Te hemos enviado un correo para cambiar la contraseña.");
+
+}catch(error){
+
+alert("No se pudo enviar el correo.");
+
+}
+
+}
+
+async function recuperarPassEmpresa(){
+
+let correo = document.getElementById("mailEmpresa").value.trim();
+
+if(!correo){
+alert("Escribe el correo de la empresa");
+return;
+}
+
+try{
+
+await window.sendPasswordResetEmail(window.auth,correo);
+
+alert("Correo enviado correctamente.");
+
+}catch(error){
+
+alert("No se pudo enviar el correo.");
+
+}
+
+}
+
+async function recuperarPassTrabajador(){
+
+alert("Todavía no hay trabajadores registrados.");
+
 }
 
 try{

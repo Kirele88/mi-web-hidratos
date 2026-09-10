@@ -2137,43 +2137,7 @@ async function delRec(i, origen){
     // SI SOLO ESTÁ EN UNA SECCIÓN
     // =====================================================
 
-    let confirmar = confirm(
-        "¿Quieres eliminar esta receta de " +
-        (
-            origen === "tus"
-            ? "Tus recetas"
-            : "Recetas online"
-        ) +
-        "?"
-    );
-
-    if(!confirmar){
-        return;
-    }
-
-
-    try{
-
-        await deleteDoc(
-            doc(db,"recetas",r._docId)
-        );
-
-        recetas.splice(i,1);
-
-        mostrarRecetas();
-
-    }catch(e){
-
-        console.error(
-            "Error eliminando receta:",
-            e
-        );
-
-        alert(
-            "No se pudo eliminar la receta: " +
-            e.message
-        );
-    }
+mostrarModalEliminarUna(i, origen);
 }
 
 function mostrarModalEliminar(i, origen){
@@ -2246,6 +2210,105 @@ function mostrarModalEliminar(i, origen){
     document.body.appendChild(modal);
 }
 
+async function confirmarEliminarSoloUna(i){
+
+    const r=recetas[i];
+
+    if(!r){
+        cerrarModalEliminar();
+        alert("No se encontró la receta.");
+        return;
+    }
+
+    try{
+
+        await deleteDoc(
+            doc(db,"recetas",r._docId)
+        );
+
+        recetas.splice(i,1);
+
+        cerrarModalEliminar();
+
+        mostrarRecetas();
+
+    }catch(e){
+
+        console.error(
+            "Error eliminando receta:",
+            e
+        );
+
+        cerrarModalEliminar();
+
+        alert(
+            "No se pudo eliminar la receta: " +
+            e.message
+        );
+    }
+}
+   
+function mostrarModalEliminarUna(i, origen){
+
+    const existente =
+        document.getElementById("modalEliminar");
+
+    if(existente){
+        existente.remove();
+    }
+
+    const seccion =
+        origen === "tus"
+        ? "Tus recetas"
+        : "Recetas online";
+
+    const modal=document.createElement("div");
+
+    modal.id="modalEliminar";
+
+    modal.className="modalEliminar";
+
+    modal.innerHTML=`
+
+        <div class="modalEliminarCard">
+
+            <h3>⚠️ Eliminar receta</h3>
+
+            <p>
+                Esta receta está guardada solamente en
+                <b>${seccion}</b>.
+            </p>
+
+            <p>
+                ¿Quieres eliminar esta receta?
+            </p>
+
+            <div class="modalEliminarBotones">
+
+                <button
+                    class="btn-eliminar-ambas"
+                    onclick="confirmarEliminarSoloUna(${i})">
+
+                    🗑️ Eliminar receta
+
+                </button>
+
+                <button
+                    class="btn-cancelar"
+                    onclick="cerrarModalEliminar()">
+
+                    ↩️ Cancelar
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+   
 function cerrarModalEliminar(){
 
     const modal =

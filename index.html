@@ -1193,45 +1193,83 @@ async function cargarIngredientes() {
 }
 
 document.addEventListener("keydown", function(e){
+
     let activa = document.querySelector(".pantalla.activa")?.id;
 
-    // --- TECLA ENTER (ENTRAR / CALCULAR / AÑADIR) ---
+    // =========================
+    // TECLA ENTER
+    // =========================
     if(e.key === "Enter"){
-        // 1. Si el usuario no ha iniciado sesión, Enter siempre intenta Entrar
-        if(!usuarioActual){
+
+        // EMPRESA
+        if(document.getElementById("loginEmpresa").style.display !== "none"){
+            e.preventDefault();
+            entrarEmpresa();
+            return;
+        }
+
+        // TRABAJADOR
+        if(document.getElementById("loginTrabajador").style.display !== "none"){
+            e.preventDefault();
+            entrarTrabajador();
+            return;
+        }
+
+        // USUARIO INDIVIDUAL
+        if(document.getElementById("login").style.display !== "none"){
+            e.preventDefault();
             window.entrar();
             return;
         }
 
-        // 2. Si ya hay sesión, Enter hace la acción de la pantalla actual
-        if(document.activeElement.tagName === "TEXTAREA") return; // No dispara si escribe en la receta
+        // Si estamos escribiendo una receta
+        if(document.activeElement.tagName === "TEXTAREA") return;
 
-        if(activa === "ingredientes"){ addIng(); return; }
-        if(activa === "crear"){ 
-            // Si hay un cuadro de ingrediente desconocido abierto, confirma ese dato
-            if(document.getElementById("nuevo") && document.getElementById('pregunta').style.display !== 'none'){
+        // INGREDIENTES
+        if(activa === "ingredientes"){
+            e.preventDefault();
+            addIng();
+            return;
+        }
+
+        // CREAR RECETA
+        if(activa === "crear"){
+            e.preventDefault();
+
+            if(
+                document.getElementById("nuevo") &&
+                document.getElementById("pregunta").style.display !== "none"
+            ){
                 document.querySelector("#pregunta button").click();
-            } else {
-                calcular(); 
+            }else{
+                calcular();
             }
-            return; 
+
+            return;
         }
     }
 
-    // --- TECLA SHIFT (SALIR / SALTAR) ---
+    // =========================
+    // TECLA SHIFT
+    // =========================
     if(e.key === "Shift"){
-        // 1. Si hay una pregunta de ingrediente nuevo activa, Shift sirve para Saltar
-        if(document.getElementById("pregunta") && document.getElementById("pregunta").style.display !== "none"){
+
+        // Saltar ingrediente desconocido
+        if(
+            document.getElementById("pregunta") &&
+            document.getElementById("pregunta").style.display !== "none"
+        ){
             preguntar();
             return;
         }
 
-        // 2. Si hay sesión iniciada y no estamos saltando un ingrediente, Shift cierra sesión
+        // Cerrar sesión
         if(usuarioActual){
             window.salir();
             return;
         }
     }
+
 });
 function pdfSeleccionadas(){
 

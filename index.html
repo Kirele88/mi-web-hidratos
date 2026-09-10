@@ -923,13 +923,12 @@ function ir(p){
 
 function limpiar(l){
 
-    return l
+    return String(l || "")
         .toLowerCase()
-        .replace(/\s*(\d+(?:[.,]\d+)?)\s*ml$/i," $1")
-        .replace(/\s*(\d+(?:[.,]\d+)?)\s*g$/i," $1")
+        .replace(",", ".")
+        .replace(/\s+(ml|g)\s*$/i, "")
         .trim();
 }
-
 // =========================================================
 // CONTEXTO DE DATOS
 // =========================================================
@@ -1000,84 +999,177 @@ function esIngredienteDelContexto(data){
 // =========================================================
 // CÁLCULO DE RECETAS
 // =========================================================
+function toggleAyuda(){
+
+    const ayuda = document.getElementById("ayudaReceta");
+
+    if(!ayuda) return;
+
+    if(ayuda.style.display === "none" || ayuda.style.display === ""){
+        ayuda.style.display = "block";
+    }else{
+        ayuda.style.display = "none";
+    }
+}
+
 async function calcular(){
 
-    let nombre=document.getElementById("nombre").value.trim();
-    let personas=parseFloat(document.getElementById("personas").value);
-    let lineas=document.getElementById("texto").value.split("\n");
+    let nombre = document.getElementById("nombre").value.trim();
+    let personas = parseFloat(document.getElementById("personas").value);
+    let texto = document.getElementById("texto").value;
 
     if(!usuarioActual){
         alert("Inicia sesión antes de guardar una receta.");
         return;
     }
 
-    if(!nombre || !personas){
-        alert("Faltan datos");
+    if(!nombre){
+        alert("Introduce el nombre de la receta.");
         return;
     }
 
-    pendientes=[];
-    let lista=[];
+    if(!personas || personas <= 0){
+        alert("Introduce el número de raciones.");
+        return;
+    }
 
-    lineas.forEach(l=>{
+    if(!texto.trim()){
+        alert("Introduce al menos un ingrediente.");
+        return;
+    }
 
-        l=limpiar(l);
+    pendientes = [];
+
+    let lista = [];
+
+    const lineas = texto.split(/\r?\n/);
+
+    lineas.forEach(linea => {
+
+        let l = limpiar(linea);
 
         if(!l) return;
 
-        let partes=l.split(" ");
-        let cant=parseFloat(partes.pop());
-        let nom=partes.join(" ");
+        let partes = l.split(/\s+/);
 
-        if(!nom || isNaN(cant)) return;
+        if(partes.length < 2) return;
 
-        lista.push({nom,cant});
+        let cantidadTexto = partes.pop();
 
-        if(ingredientes[nom]===undefined){
-            pendientes.push(nom);
+        let cant = parseFloat(cantidadTexto);
+
+        let nom = partes.join(" ").trim();
+
+        if(!nom || isNaN(cant)){
+            return;
+        }
+
+        lista.push({
+            nom: nom,
+            cant: cant
+        });
+
+        if(ingredientes[nom] === undefined){
+
+            if(!pendientes.includes(nom)){
+                pendientes.push(nom);
+            }
+
         }
     });
 
-    datosTemp={lista,nombre,personas};
+    if(lista.length === 0){
 
-    if(pendientes.length>0){
+        alert(
+            "No se han podido reconocer los ingredientes.\n\n" +
+            "Escribe cada ingrediente así:\n" +
+            "Harina 100 g\n" +
+            "Leche 200 ml"
+        );
+
+        return;
+    }
+
+    datosTemp = {
+        lista: lista,
+        nombre: nombre,
+        personas: personas
+    };
+
+    if(pendientes.length > 0){
+
         preguntar();
+
     }else{
+
         calcularFinal();
     }
 }
-
 function preguntar(){
 
-    if(pendientes.length===0){
+    const pregunta = document.getElementById("pregunta");
+
+    if(!pregunta) return;
+
+    if(pendientes.length === 0){
+
         calcularFinal();
         return;
     }
 
-    let ing=pendientes.shift();
+    const ing = pendientes.shift();
 
-    document.getElementById("pregunta").style.display="block";
+    pregunta.style.display = "block";
 
-    document.getElementById("pregunta").innerHTML=`
-        <p>
-            ¿Cuántos gramos corresponden a 10g de HC para
-            "${escapeHtml(ing)}"?
-        </p>
+    pregunta.innerHTML = `
+        <div style="
+            background:#fff8e1;
+            border:2px solid #f0ad4e;
+            border-radius:10px;
+            padding:15px;
+            margin-top:15px;
+        ">
 
-        <input id="nuevo" placeholder="Gramos">
+            <p style="margin-top:0;">
+                <b>Ingrediente no registrado:</b>
+                ${escapeHtml(ing)}
+            </p>
 
-        <button class="btn"
+            <p>
+                ¿Cuántos gramos de este ingrediente corresponden
+                a <b>10 g de HC</b>?
+            </p>
+
+            <input
+                id="nuevo"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="Ejemplo: 75"
+            >
+
+            <button
+                type="button"
+                class="btn"
                 onclick="guardarIng('${escapeJs(ing)}')">
-            Guardar
-        </button>
+                Guardar ingrediente
+            </button>
 
-        <button class="btn"
+            <button
+                type="button"
+                class="btn"
                 onclick="preguntar()">
-            Saltar
-        </button>
+                Saltar
+            </button>
+
+        </div>
     `;
 
-    document.getElementById("nuevo").focus();
+    const input = document.getElementById("nuevo");
+
+    if(input){
+        input.focus();
+    }
 }
 
 async function guardarIng(ing){
@@ -2560,17 +2652,22 @@ document.addEventListener("keydown",function(e){
         }
     }
 
-    if(e.key==="Shift"){
+    if(e.key === "Shift"){
 
-        if(
-            document.getElementById("pregunta") &&
-            document.getElementById("pregunta").style.display!=="none"
-        ){
+    const pregunta = document.getElementById("pregunta");
+    const nuevo = document.getElementById("nuevo");
 
-            preguntar();
-            return;
-        }
+    if(
+        pregunta &&
+        pregunta.style.display !== "none" &&
+        nuevo
+    ){
+
+        e.preventDefault();
+        preguntar();
+        return;
     }
+}
 });
 
 // =========================================================

@@ -822,42 +822,26 @@ function seleccionarEmpresaPorId(id){
 // CONTEXTO INDIVIDUAL
 // =========================================================
 async function activarIndividual(){
-
-    if(!usuarioActual){
-        mostrarLoginInicial();
-        return;
-    }
+    if(!usuarioActual){ mostrarLoginInicial(); return; }
 
     ocultarAccesos();
+    document.getElementById("selector").style.display="none";
 
-    contextoActual={
-        tipo:"individual",
-        companyId:null,
-        companyName:null,
-        rol:null
-    };
-
+    contextoActual={tipo:"individual",companyId:null,companyName:null,rol:null};
     tipoSesion="individual";
     empresaActual="";
     trabajadorActual="";
 
     document.getElementById("cabecera").style.display="block";
     document.getElementById("menu").style.display="flex";
-
     actualizarCabecera();
-
     ir("inicio");
 
     try{
         await cargarTodo();
     }catch(error){
-
         console.error("Error cargando datos individuales:",error);
-
-        alert(
-            "La sesión individual está activa, pero Firebase no permite " +
-            "cargar los datos. Revisa las reglas de Firestore."
-        );
+        alert("La sesión individual está activa, pero Firebase no permite cargar los datos. Revisa las reglas de Firestore.");
     }
 }
 

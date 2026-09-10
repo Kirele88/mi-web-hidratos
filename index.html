@@ -2829,13 +2829,10 @@ onAuthStateChanged(auth,user=>{
 
         usuarioActual=user;
 
-        // Si Firebase conserva la sesión,
-        // entramos directamente en Individual.
-        activarIndividual();
-
     }else{ 
 
         usuarioActual=null;
+        mostrarLoginInicial();
 
     } 
 });

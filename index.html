@@ -2031,9 +2031,12 @@ function pdfSeleccionadas(){
 // =========================================================
 async function delRec(i, origen){
 
-    let r=recetas[i];
+    let r = recetas[i];
 
-    if(!r) return;
+    if(!r){
+        alert("No se encontró la receta.");
+        return;
+    }
 
     if(!origen){
         alert("No se ha podido determinar dónde está la receta.");
@@ -2045,9 +2048,86 @@ async function delRec(i, origen){
         return;
     }
 
+    const estaEnTus =
+        r.tipo.includes("tus");
+
+    const estaOnline =
+        r.tipo.includes("online");
+
+
+    // SI LA RECETA ESTÁ EN LAS DOS SECCIONES
+
+    if(estaEnTus && estaOnline){
+
+        let eliminarAmbas = confirm(
+            "Esta receta está en Tus recetas y Recetas online.\n\n" +
+            "¿Quieres eliminarla de las DOS?\n\n" +
+            "Aceptar = eliminar en las dos.\n" +
+            "Cancelar = eliminar solamente en " +
+            (
+                origen === "tus"
+                ? "Tus recetas."
+                : "Recetas online."
+            )
+        );
+
+        try{
+
+            // ELIMINAR DE LAS DOS
+
+            if(eliminarAmbas){
+
+                await deleteDoc(
+                    doc(db,"recetas",r._docId)
+                );
+
+                recetas.splice(i,1);
+
+            }
+
+            // ELIMINAR SOLO DE UNA
+
+            else{
+
+                const tipoContrario =
+                    origen === "tus"
+                    ? "online"
+                    : "tus";
+
+                await updateDoc(
+                    doc(db,"recetas",r._docId),
+                    {
+                        tipo:[tipoContrario]
+                    }
+                );
+
+                r.tipo = [tipoContrario];
+            }
+
+            mostrarRecetas();
+
+        }catch(e){
+
+            console.error(
+                "Error eliminando receta:",
+                e
+            );
+
+            alert(
+                "No se pudo eliminar la receta: " +
+                e.message
+            );
+        }
+
+        return;
+    }
+
+
+    // SI SOLO ESTÁ EN UNA SECCIÓN
+
     if(
         !confirm(
-            origen==="tus"
+            origen === "tus"
             ? "¿Eliminar esta receta de Tus recetas?"
             : "¿Eliminar esta receta de Recetas online?"
         )
@@ -2057,44 +2137,20 @@ async function delRec(i, origen){
 
     try{
 
-        // Quitamos solamente el lugar desde
-        // el que estamos eliminando la receta.
-
-        let nuevosTipos=r.tipo.filter(
-            t=>t!==origen
+        await deleteDoc(
+            doc(db,"recetas",r._docId)
         );
 
-        // Si todavía queda otro lugar,
-        // NO eliminamos la receta de Firebase.
-        if(nuevosTipos.length>0){
-
-            await updateDoc(
-                doc(db,"recetas",r._docId),
-                {
-                    tipo:nuevosTipos
-                }
-            );
-
-            r.tipo=nuevosTipos;
-
-        }
-
-        // Si no queda ningún lugar,
-        // eliminamos la receta completamente.
-        else{
-
-            await deleteDoc(
-                doc(db,"recetas",r._docId)
-            );
-
-            recetas.splice(i,1);
-        }
+        recetas.splice(i,1);
 
         mostrarRecetas();
 
     }catch(e){
 
-        console.error("Error eliminando receta:",e);
+        console.error(
+            "Error eliminando receta:",
+            e
+        );
 
         alert(
             "No se pudo eliminar la receta: " +

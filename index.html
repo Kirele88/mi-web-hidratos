@@ -1564,32 +1564,6 @@ async function entrarEmpresa(){
 
 }
 
-try{
-
-let res = await window.signInWithEmailAndPassword(
-window.auth,
-correo,
-pass
-);
-
-empresaActual = correo;
-
-document.getElementById("loginEmpresa").style.display="none";
-document.getElementById("loginTrabajador").style.display="block";
-
-document.getElementById("nombreEmpresa").innerHTML =
-"Empresa: " + correo;
-
-}catch(error){
-
-console.error("ERROR LOGIN EMPRESA:", error.code, error.message);
-
-alert("ERROR: " + error.code + "\n\n" + error.message);
-
-}
-
-}
-
 async function crearEmpresa(){
 
 let nombre = document.getElementById("nombreNuevaEmpresa").value;
@@ -1806,4 +1780,3 @@ setTimeout(() => {
 
 </body>
 </html>
-

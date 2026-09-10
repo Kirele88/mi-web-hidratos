@@ -2026,16 +2026,11 @@ window.entrar=async function(){
         .value;
 
     if(!correo || !pass){
-
-        alert(
-            "Introduce tu correo y contraseña."
-        );
-
+        alert("Introduce tu correo y contraseña.");
         return;
     }
 
     try{
-
         const res=
             await signInWithEmailAndPassword(
                 auth,
@@ -2045,13 +2040,12 @@ window.entrar=async function(){
 
         usuarioActual=res.user;
 
-        // DESPUES del login se elige el espacio.
-        await mostrarSelectorDeEspacios();
+        // Al iniciar sesión entramos directamente
+        // en el espacio individual.
+        await activarIndividual();
 
     }catch(error){
-
         console.error("ERROR LOGIN:",error);
-
         alert(errorAuth(error));
     }
 };
@@ -2748,20 +2742,21 @@ window.sendPasswordResetEmail=
     sendPasswordResetEmail;
 
 // Restaurar la sesión de Firebase si el navegador ya la conserva.
-onAuthStateChanged(auth,user=>{
+onAuthStateChanged(auth,user=>{ 
 
-    if(user){
+    if(user){ 
 
         usuarioActual=user;
 
-        // Si Firebase ya tenía una sesión guardada,
-        // mostramos directamente la selección de espacios.
-        mostrarSelectorDeEspacios();
+        // Si Firebase conserva la sesión,
+        // entramos directamente en Individual.
+        activarIndividual();
 
-    }else{
+    }else{ 
 
         usuarioActual=null;
-    }
+
+    } 
 });
 
 </script>

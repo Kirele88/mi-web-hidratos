@@ -384,10 +384,6 @@ Elige tu espacio de trabajo.
 
 <div id="listaEmpresas"></div>
 
-<button class="btn-rojo" onclick="salir()">
-Salir
-</button>
-
 </div>
 </div>
 
@@ -1408,97 +1404,309 @@ function mostrarRecetas(){
 
         let i=recetas.indexOf(r);
 
-        let fila=`
-            <tr>
-
-                <td>${escapeHtml(r.nombre)}</td>
-
-                <td>${Number(r.total).toFixed(2)}</td>
-
-                <td>${Number(r.pp).toFixed(2)}</td>
-
-                <td>
-                    <button class="btn"
-                            onclick="pdf(${i})">
-                        PDF
-                    </button>
-                </td>
-
-                <td>
-                    <button class="btn"
-                            onclick="subirImagen(${i})">
-                        ✏️
-                    </button>
-                </td>
-
-                <td>
-                    <button class="btn-rojo"
-                            onclick="delRec(${i})">
-                        ❌
-                    </button>
-                </td>
-
-                <td>
-                    <input type="checkbox"
-                           class="checkReceta"
-                           value="${i}">
-                </td>
-
-            </tr>
-        `;
+        // =========================================
+        // RECETA EN TUS RECETAS
+        // =========================================
 
         if(
             r.tipo &&
             r.tipo.includes("tus") &&
             r.nombre.toLowerCase().includes(buscarTus)
         ){
-            tus.innerHTML+=fila;
+
+            tus.innerHTML+=`
+                <tr>
+
+                    <td>${escapeHtml(r.nombre)}</td>
+
+                    <td>${Number(r.total).toFixed(2)}</td>
+
+                    <td>${Number(r.pp).toFixed(2)}</td>
+
+                    <td>
+                        <button class="btn"
+                                onclick="pdf(${i})">
+                            PDF
+                        </button>
+                    </td>
+
+                    <td>
+                        <button class="btn"
+                                onclick="editarReceta(${i}, 'tus')">
+                            ✏️
+                        </button>
+                    </td>
+
+                    <td>
+                        <button class="btn-rojo"
+                                onclick="delRec(${i}, 'tus')">
+                            ❌
+                        </button>
+                    </td>
+
+                    <td>
+                        <input type="checkbox"
+                               class="checkReceta"
+                               data-origen="tus"
+                               value="${i}">
+                    </td>
+
+                </tr>
+            `;
         }
+
+        // =========================================
+        // RECETA EN RECETAS ONLINE
+        // =========================================
 
         if(
             r.tipo &&
             r.tipo.includes("online") &&
             r.nombre.toLowerCase().includes(buscarOnline)
         ){
-            online.innerHTML+=fila;
+
+            online.innerHTML+=`
+                <tr>
+
+                    <td>${escapeHtml(r.nombre)}</td>
+
+                    <td>${Number(r.total).toFixed(2)}</td>
+
+                    <td>${Number(r.pp).toFixed(2)}</td>
+
+                    <td>
+                        <button class="btn"
+                                onclick="pdf(${i})">
+                            PDF
+                        </button>
+                    </td>
+
+                    <td>
+                        <button class="btn"
+                                onclick="editarReceta(${i}, 'online')">
+                            ✏️
+                        </button>
+                    </td>
+
+                    <td>
+                        <button class="btn-rojo"
+                                onclick="delRec(${i}, 'online')">
+                            ❌
+                        </button>
+                    </td>
+
+                    <td>
+                        <input type="checkbox"
+                               class="checkReceta"
+                               data-origen="online"
+                               value="${i}">
+                    </td>
+
+                </tr>
+            `;
         }
+
     });
 }
-
-function irOnline(){
-
     document.getElementById("online")
         .scrollIntoView({behavior:"smooth"});
 }
 
-function subirImagen(i){
+async function editarReceta(i, origen){
 
-    let input=document.createElement("input");
+    let r=recetas[i];
 
-    input.type="file";
-    input.accept="image/*";
+    if(!r){
+        alert("No se encontró la receta.");
+        return;
+    }
 
-    input.onchange=function(){
+    if(!r._docId){
+        alert("Esta receta no tiene un identificador válido.");
+        return;
+    }
 
-        let archivo=input.files[0];
+    if(!r.tipo || !r.tipo.includes(origen)){
+        alert("Esta receta no pertenece a esta sección.");
+        return;
+    }
 
-        if(!archivo) return;
+    // Pedimos el nuevo nombre
+    let nuevoNombre=prompt(
+        "Introduce el nuevo nombre de la receta:",
+        r.nombre
+    );
 
-        let lector=new FileReader();
+    // Si pulsa Cancelar
+    if(nuevoNombre===null){
+        return;
+    }
 
-        lector.onload=function(e){
+    nuevoNombre=nuevoNombre.trim();
 
-            recetas[i].imagen=e.target.result;
+    if(!nuevoNombre){
+        alert("El nombre no puede estar vacío.");
+        return;
+    }
 
-            alert("Imagen añadida correctamente");
-        };
+    // Si escribe exactamente el mismo nombre
+    if(nuevoNombre===r.nombre){
+        return;
+    }
 
-        lector.readAsDataURL(archivo);
-    };
+    const estaEnTus=
+        r.tipo.includes("tus");
 
-    input.click();
+    const estaOnline=
+        r.tipo.includes("online");
+
+
+    // =====================================================
+    // SI ESTÁ EN LAS DOS
+    // =====================================================
+
+    if(estaEnTus && estaOnline){
+
+        let cambiarAmbas=confirm(
+            "Esta receta está en Tus recetas y Recetas online.\n\n" +
+            "¿Quieres cambiar el nombre en las DOS?\n\n" +
+            "Aceptar = cambiar en las dos.\n" +
+            "Cancelar = cambiar solamente en " +
+            (
+                origen==="tus"
+                ? "Tus recetas."
+                : "Recetas online."
+            )
+        );
+
+        try{
+
+            // -------------------------------------------------
+            // CAMBIAR EN LAS DOS
+            // -------------------------------------------------
+
+            if(cambiarAmbas){
+
+                await updateDoc(
+                    doc(db,"recetas",r._docId),
+                    {
+                        nombre:nuevoNombre
+                    }
+                );
+
+                r.nombre=nuevoNombre;
+
+            }
+
+            // -------------------------------------------------
+            // CAMBIAR SOLO EN UNA
+            // -------------------------------------------------
+
+            else{
+
+                const tipoContrario=
+                    origen==="tus"
+                    ? "online"
+                    : "tus";
+
+
+                // Creamos una copia de la receta
+                // para la sección que estamos editando.
+
+                const nuevaReceta={
+                    ...r,
+                    nombre:nuevoNombre,
+                    tipo:[origen]
+                };
+
+                // No copiar el ID de Firebase
+                delete nuevaReceta._docId;
+
+
+                // Crear nuevo documento
+                const nuevaRef=await addDoc(
+                    collection(db,"recetas"),
+                    nuevaReceta
+                );
+
+
+                // El documento original se queda
+                // solamente en la otra sección.
+
+                await updateDoc(
+                    doc(db,"recetas",r._docId),
+                    {
+                        tipo:[tipoContrario]
+                    }
+                );
+
+
+                // Actualizamos la receta original
+                r.tipo=[tipoContrario];
+
+
+                // Añadimos la nueva receta al array
+                recetas.push({
+                    ...nuevaReceta,
+                    _docId:nuevaRef.id
+                });
+
+            }
+
+        }catch(e){
+
+            console.error(
+                "Error cambiando nombre:",
+                e
+            );
+
+            alert(
+                "No se pudo cambiar el nombre: " +
+                e.message
+            );
+
+            return;
+        }
+
+    }
+
+    // =====================================================
+    // SI SOLO ESTÁ EN UNA SECCIÓN
+    // =====================================================
+
+    else{
+
+        try{
+
+            await updateDoc(
+                doc(db,"recetas",r._docId),
+                {
+                    nombre:nuevoNombre
+                }
+            );
+
+            r.nombre=nuevoNombre;
+
+        }catch(e){
+
+            console.error(
+                "Error cambiando nombre:",
+                e
+            );
+
+            alert(
+                "No se pudo cambiar el nombre: " +
+                e.message
+            );
+
+            return;
+        }
+    }
+
+    mostrarRecetas();
+
+    alert("Nombre cambiado correctamente.");
 }
-
 // =========================================================
 // PDF
 // =========================================================
@@ -1824,39 +2032,72 @@ function pdfSeleccionadas(){
 // =========================================================
 // BORRADO
 // =========================================================
-async function delRec(i){
+async function delRec(i, origen){
 
     let r=recetas[i];
 
     if(!r) return;
 
-    if(!esRecetaDelContexto(r)){
-
-        alert(
-            "No puedes eliminar esta receta desde este espacio."
-        );
-
+    if(!origen){
+        alert("No se ha podido determinar dónde está la receta.");
         return;
     }
 
-    if(!confirm("¿Eliminar esta receta?")) return;
+    if(!r.tipo || !r.tipo.includes(origen)){
+        alert("Esta receta ya no pertenece a esta sección.");
+        return;
+    }
+
+    if(
+        !confirm(
+            origen==="tus"
+            ? "¿Eliminar esta receta de Tus recetas?"
+            : "¿Eliminar esta receta de Recetas online?"
+        )
+    ){
+        return;
+    }
 
     try{
 
-        if(r._docId){
+        // Quitamos solamente el lugar desde
+        // el que estamos eliminando la receta.
+
+        let nuevosTipos=r.tipo.filter(
+            t=>t!==origen
+        );
+
+        // Si todavía queda otro lugar,
+        // NO eliminamos la receta de Firebase.
+        if(nuevosTipos.length>0){
+
+            await updateDoc(
+                doc(db,"recetas",r._docId),
+                {
+                    tipo:nuevosTipos
+                }
+            );
+
+            r.tipo=nuevosTipos;
+
+        }
+
+        // Si no queda ningún lugar,
+        // eliminamos la receta completamente.
+        else{
 
             await deleteDoc(
                 doc(db,"recetas",r._docId)
             );
-        }
 
-        recetas.splice(i,1);
+            recetas.splice(i,1);
+        }
 
         mostrarRecetas();
 
     }catch(e){
 
-        console.error("Error:",e);
+        console.error("Error eliminando receta:",e);
 
         alert(
             "No se pudo eliminar la receta: " +
@@ -1865,20 +2106,7 @@ async function delRec(i){
     }
 }
 
-async function borrarRecetasMarcadas(){
-
-    let checks=[
-        ...document.querySelectorAll(".checkReceta:checked")
-    ];
-
-    let indices=checks
-        .map(c=>parseInt(c.value))
-        .sort((a,b)=>b-a);
-
-    for(let i of indices){
-        await delRec(i);
-    }
-}
+    
 
 // =========================================================
 // INGREDIENTES

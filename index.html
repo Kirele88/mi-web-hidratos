@@ -881,7 +881,7 @@ async function mostrarSelectorContexto(){
 // =========================================================
 // FORMULARIO CREAR CUENTA
 // =========================================================
-function mostrarNuevoUsuario(){
+window.mostrarNuevoUsuario = function(){
 
     ocultarAccesos();
 
@@ -2315,7 +2315,7 @@ window.registrar=async function(){
 // =========================================================
 // ENTRADA PRINCIPAL
 // =========================================================
-window.entrar=async function(){
+window.entrar = async function(){
 
     let correo=
         document.getElementById("mail")
@@ -2763,7 +2763,7 @@ function volverSelector(){
 // =========================================================
 // RECUPERAR CONTRASEÑA
 // =========================================================
-window.recuperarPass=async function(){
+window.recuperarPass = async function(){
 
     let correo=
         document.getElementById("mail")

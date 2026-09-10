@@ -2038,13 +2038,13 @@ async function delRec(i, origen){
         return;
     }
 
-    if(!origen){
-        alert("No se ha podido determinar dónde está la receta.");
+    if(!r._docId){
+        alert("Esta receta no tiene un identificador válido.");
         return;
     }
 
     if(!r.tipo || !r.tipo.includes(origen)){
-        alert("Esta receta ya no pertenece a esta sección.");
+        alert("Esta receta no pertenece a esta sección.");
         return;
     }
 
@@ -2055,15 +2055,17 @@ async function delRec(i, origen){
         r.tipo.includes("online");
 
 
-    // SI LA RECETA ESTÁ EN LAS DOS SECCIONES
+    // =====================================================
+    // SI LA RECETA ESTÁ EN LAS DOS
+    // =====================================================
 
     if(estaEnTus && estaOnline){
 
         let eliminarAmbas = confirm(
             "Esta receta está en Tus recetas y Recetas online.\n\n" +
             "¿Quieres eliminarla de las DOS?\n\n" +
-            "Aceptar = eliminar en las dos.\n" +
-            "Cancelar = eliminar solamente en " +
+            "Aceptar = eliminarla de las dos.\n" +
+            "Cancelar = eliminarla SOLO de " +
             (
                 origen === "tus"
                 ? "Tus recetas."
@@ -2071,9 +2073,12 @@ async function delRec(i, origen){
             )
         );
 
+
         try{
 
+            // =============================================
             // ELIMINAR DE LAS DOS
+            // =============================================
 
             if(eliminarAmbas){
 
@@ -2085,7 +2090,9 @@ async function delRec(i, origen){
 
             }
 
-            // ELIMINAR SOLO DE UNA
+            // =============================================
+            // ELIMINAR SOLO DE LA QUE HAS MARCADO
+            // =============================================
 
             else{
 
@@ -2094,6 +2101,7 @@ async function delRec(i, origen){
                     ? "online"
                     : "tus";
 
+
                 await updateDoc(
                     doc(db,"recetas",r._docId),
                     {
@@ -2101,10 +2109,16 @@ async function delRec(i, origen){
                     }
                 );
 
-                r.tipo = [tipoContrario];
+
+                // La receta sigue existiendo,
+                // pero solamente en la otra sección.
+
+                r.tipo=[tipoContrario];
             }
 
+
             mostrarRecetas();
+
 
         }catch(e){
 
@@ -2117,23 +2131,32 @@ async function delRec(i, origen){
                 "No se pudo eliminar la receta: " +
                 e.message
             );
+
+            return;
         }
 
         return;
     }
 
 
-    // SI SOLO ESTÁ EN UNA SECCIÓN
+    // =====================================================
+    // SI LA RECETA SOLO ESTÁ EN UNA SECCIÓN
+    // =====================================================
 
-    if(
-        !confirm(
+    let confirmar=confirm(
+        "¿Quieres eliminar esta receta de " +
+        (
             origen === "tus"
-            ? "¿Eliminar esta receta de Tus recetas?"
-            : "¿Eliminar esta receta de Recetas online?"
-        )
-    ){
+            ? "Tus recetas"
+            : "Recetas online"
+        ) +
+        "?"
+    );
+
+    if(!confirmar){
         return;
     }
+
 
     try{
 
@@ -2144,6 +2167,7 @@ async function delRec(i, origen){
         recetas.splice(i,1);
 
         mostrarRecetas();
+
 
     }catch(e){
 

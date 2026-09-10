@@ -300,6 +300,86 @@ transition:0.2s;
 background:#f0f0f0;
 transform:translateY(-1px);
 }
+
+/* =========================================================
+   VENTANA DE CONFIRMACIÓN PARA ELIMINAR
+   ========================================================= */
+
+.modalEliminar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modalEliminarCard{
+    background:white;
+    width:420px;
+    max-width:90%;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.25);
+    text-align:center;
+}
+
+.modalEliminarCard h3{
+    margin-top:0;
+}
+
+.modalEliminarBotones{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:20px;
+}
+
+.btn-eliminar-ambas{
+    background:#e74c3c;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-eliminar-ambas:hover{
+    background:#c0392b;
+}
+
+.btn-eliminar-una{
+    background:#f39c12;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-eliminar-una:hover{
+    background:#d68910;
+}
+
+.btn-cancelar{
+    background:#777;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-cancelar:hover{
+    background:#555;
+}
 </style>
 </head>
 
@@ -521,7 +601,6 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 <th>PDF</th>
 <th>✏️</th>
 <th>❌</th>
-<th>✅</th>
 </tr>
 </thead>
 
@@ -545,7 +624,6 @@ Selecciona dónde deseas guardar la receta que estás calculando: en Tus recetas
 <th>PDF</th>
 <th>✏️</th>
 <th>❌</th>
-<th>✅</th>
 </tr>
 </thead>
 
@@ -1444,13 +1522,6 @@ function mostrarRecetas(){
                         </button>
                     </td>
 
-                    <td>
-                        <input type="checkbox"
-                               class="checkReceta"
-                               data-origen="tus"
-                               value="${i}">
-                    </td>
-
                 </tr>
             `;
         }
@@ -1495,12 +1566,7 @@ function mostrarRecetas(){
                         </button>
                     </td>
 
-                    <td>
-                        <input type="checkbox"
-                               class="checkReceta"
-                               data-origen="online"
-                               value="${i}">
-                    </td>
+                      
 
                 </tr>
             `;
@@ -2056,94 +2122,22 @@ async function delRec(i, origen){
 
 
     // =====================================================
-    // SI LA RECETA ESTÁ EN LAS DOS
+    // SI ESTÁ EN LAS DOS SECCIONES
     // =====================================================
 
     if(estaEnTus && estaOnline){
 
-        let eliminarAmbas = confirm(
-            "Esta receta está en Tus recetas y Recetas online.\n\n" +
-            "¿Quieres eliminarla de las DOS?\n\n" +
-            "Aceptar = eliminarla de las dos.\n" +
-            "Cancelar = eliminarla SOLO de " +
-            (
-                origen === "tus"
-                ? "Tus recetas."
-                : "Recetas online."
-            )
-        );
-
-
-        try{
-
-            // =============================================
-            // ELIMINAR DE LAS DOS
-            // =============================================
-
-            if(eliminarAmbas){
-
-                await deleteDoc(
-                    doc(db,"recetas",r._docId)
-                );
-
-                recetas.splice(i,1);
-
-            }
-
-            // =============================================
-            // ELIMINAR SOLO DE LA QUE HAS MARCADO
-            // =============================================
-
-            else{
-
-                const tipoContrario =
-                    origen === "tus"
-                    ? "online"
-                    : "tus";
-
-
-                await updateDoc(
-                    doc(db,"recetas",r._docId),
-                    {
-                        tipo:[tipoContrario]
-                    }
-                );
-
-
-                // La receta sigue existiendo,
-                // pero solamente en la otra sección.
-
-                r.tipo=[tipoContrario];
-            }
-
-
-            mostrarRecetas();
-
-
-        }catch(e){
-
-            console.error(
-                "Error eliminando receta:",
-                e
-            );
-
-            alert(
-                "No se pudo eliminar la receta: " +
-                e.message
-            );
-
-            return;
-        }
+        mostrarModalEliminar(i, origen);
 
         return;
     }
 
 
     // =====================================================
-    // SI LA RECETA SOLO ESTÁ EN UNA SECCIÓN
+    // SI SOLO ESTÁ EN UNA SECCIÓN
     // =====================================================
 
-    let confirmar=confirm(
+    let confirmar = confirm(
         "¿Quieres eliminar esta receta de " +
         (
             origen === "tus"
@@ -2168,7 +2162,6 @@ async function delRec(i, origen){
 
         mostrarRecetas();
 
-
     }catch(e){
 
         console.error(
@@ -2183,8 +2176,181 @@ async function delRec(i, origen){
     }
 }
 
-    
+function mostrarModalEliminar(i, origen){
 
+    const existente =
+        document.getElementById("modalEliminar");
+
+    if(existente){
+        existente.remove();
+    }
+
+    const seccion =
+        origen === "tus"
+        ? "Tus recetas"
+        : "Recetas online";
+
+    const modal=document.createElement("div");
+
+    modal.id="modalEliminar";
+
+    modal.className="modalEliminar";
+
+    modal.innerHTML=`
+
+        <div class="modalEliminarCard">
+
+            <h3>⚠️ Eliminar receta</h3>
+
+            <p>
+                Esta receta está guardada en
+                <b>Tus recetas</b> y
+                <b>Recetas online</b>.
+            </p>
+
+            <p>
+                ¿Qué quieres hacer?
+            </p>
+
+            <div class="modalEliminarBotones">
+
+                <button
+                    class="btn-eliminar-ambas"
+                    onclick="confirmarEliminarAmbas(${i})">
+
+                    🗑️ Eliminar de las dos
+
+                </button>
+
+                <button
+                    class="btn-eliminar-una"
+                    onclick="confirmarEliminarUna(${i}, '${origen}')">
+
+                    ❌ Eliminar solo de ${seccion}
+
+                </button>
+
+                <button
+                    class="btn-cancelar"
+                    onclick="cerrarModalEliminar()">
+
+                    ↩️ Cancelar
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+function cerrarModalEliminar(){
+
+    const modal =
+        document.getElementById("modalEliminar");
+
+    if(modal){
+        modal.remove();
+    }
+}
+
+async function confirmarEliminarAmbas(i){
+
+    const r=recetas[i];
+
+    if(!r){
+        cerrarModalEliminar();
+        alert("No se encontró la receta.");
+        return;
+    }
+
+
+    try{
+
+        await deleteDoc(
+            doc(db,"recetas",r._docId)
+        );
+
+
+        recetas.splice(i,1);
+
+        cerrarModalEliminar();
+
+        mostrarRecetas();
+
+
+    }catch(e){
+
+        console.error(
+            "Error eliminando receta:",
+            e
+        );
+
+        cerrarModalEliminar();
+
+        alert(
+            "No se pudo eliminar la receta: " +
+            e.message
+        );
+    }
+}
+
+async function confirmarEliminarUna(i, origen){
+
+    const r=recetas[i];
+
+    if(!r){
+        cerrarModalEliminar();
+        alert("No se encontró la receta.");
+        return;
+    }
+
+
+    const tipoContrario =
+        origen === "tus"
+        ? "online"
+        : "tus";
+
+
+    try{
+
+        await updateDoc(
+            doc(db,"recetas",r._docId),
+            {
+                tipo:[tipoContrario]
+            }
+        );
+
+
+        // La receta sigue existiendo,
+        // pero solamente en la otra sección.
+
+        r.tipo=[tipoContrario];
+
+
+        cerrarModalEliminar();
+
+        mostrarRecetas();
+
+
+    }catch(e){
+
+        console.error(
+            "Error eliminando receta:",
+            e
+        );
+
+        cerrarModalEliminar();
+
+        alert(
+            "No se pudo eliminar la receta: " +
+            e.message
+        );
+    }
+}
+    
 // =========================================================
 // INGREDIENTES
 // =========================================================

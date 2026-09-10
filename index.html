@@ -1526,8 +1526,43 @@ async function entrarTrabajador(){
 
 async function entrarEmpresa(){
 
-let correo = document.getElementById("mailEmpresa").value;
-let pass = document.getElementById("passEmpresa").value;
+ let correo = document.getElementById("mailEmpresa").value.trim();
+ let pass = document.getElementById("passEmpresa").value;
+
+ console.log("CORREO EMPRESA:", JSON.stringify(correo));
+ console.log("LONGITUD CONTRASEÑA:", pass.length);
+
+ try{
+
+   let res = await window.signInWithEmailAndPassword(
+     window.auth,
+     correo,
+     pass
+   );
+
+   console.log("EMPRESA AUTENTICADA:", res.user.uid);
+
+   empresaActual = correo;
+
+   document.getElementById("loginEmpresa").style.display="none";
+   document.getElementById("loginTrabajador").style.display="block";
+
+   document.getElementById("nombreEmpresa").innerHTML =
+   "Empresa: " + correo;
+
+ }catch(error){
+
+   console.error("ERROR EMPRESA:", error);
+   alert(
+     "Código: " + error.code +
+     "\n\nMensaje: " + error.message +
+     "\n\nCorreo usado: " + JSON.stringify(correo) +
+     "\nLongitud contraseña: " + pass.length
+   );
+
+ }
+
+}
 
 try{
 
